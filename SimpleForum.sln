@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataContract", "DataContract\DataContract.csproj", "{18BF54A1-7571-45B2-96A8-8AD1A0376A91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessServices", "DataAccessServices\DataAccessServices.csproj", "{59F8E953-289F-4FB8-B7F3-980A6408A26E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{18BF54A1-7571-45B2-96A8-8AD1A0376A91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18BF54A1-7571-45B2-96A8-8AD1A0376A91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18BF54A1-7571-45B2-96A8-8AD1A0376A91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59F8E953-289F-4FB8-B7F3-980A6408A26E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59F8E953-289F-4FB8-B7F3-980A6408A26E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59F8E953-289F-4FB8-B7F3-980A6408A26E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59F8E953-289F-4FB8-B7F3-980A6408A26E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
