@@ -14,5 +14,7 @@ namespace DataAccessServices.Interfaces
         Task<OperationDetails> Create(User userDto);
         Task<ClaimsIdentity> Authenticate(User userDto);
         Task SetInitialData(User adminDto, List<string> roles);
+
+        List<string> GetUsers();
     }
 }

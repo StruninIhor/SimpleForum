@@ -18,6 +18,8 @@ namespace DataContract
         public UnitOfWork(string connectionString)
         {
             Database = new ApplicationContext(connectionString);
+            userManager = new AppUserManager(new CustomUserStore(Database));
+            roleManager = new AppRoleManager(new CustomRoleStore(Database));
         }
 
         public AppUserManager UserManager => userManager;

@@ -79,6 +79,18 @@ namespace DataAccessServices
             }
         }
 
+        public List<string> GetUsers()
+        {
+            var users = Database.UserManager.Users;
+
+            List<string> result = new List<string>();
+            foreach (var user in users)
+            {
+                result.Add(user.Email);
+            }
+            return result;
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
