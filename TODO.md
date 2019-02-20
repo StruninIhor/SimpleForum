@@ -2,7 +2,8 @@
 ### Add ViewModels for Account:
 1. ~RegisterViewModel~
 2. LoginViewModel
-3. ConfirmEmailViewModel -> just string, maybe?
+3. ConfirmEmailViewModel -> just string and code
+3. ForgotPasswordViewModel
 4. ResetPasswordViewModel
 5. ProfileViewModel
 6. EditProfileViewModel
@@ -11,6 +12,8 @@
 (These tasks are more interesting because of dependencies on services which have to implement these tasks)
 1. Login
 2. ConfirmEmail
+2. ForgotPassword
+2. ForgotPasswordConfirmation
 3. ResetPassword
 4. Profile
 5. EditProfile
