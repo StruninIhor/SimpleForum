@@ -1,7 +1,7 @@
 # The main part
 ### Add ViewModels for Account:
-5. ProfileViewModel - after adding Profiles to database
-6. EditProfileViewModel
+1. ProfileViewModel - after adding Profiles to database
+2. EditProfileViewModel
 ### Add Actions to Controller:
 (These tasks are more interesting because of dependencies on services which have to implement these tasks)
 1. Login
