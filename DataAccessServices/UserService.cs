@@ -46,6 +46,12 @@ namespace DataAccessServices
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 }
 
+                if (await Database.RoleManager.FindByNameAsync("user") == null)
+                {
+                    await Database.RoleManager.CreateAsync(new DataContract.Identity.Models.CustomRole("user"));
+                    await Database.SaveAsync();
+                }
+
                 await Database.UserManager.AddToRoleAsync(user.Id, "user");
 
                 //TODO Some actions with user profile (in future)

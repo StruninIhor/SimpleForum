@@ -47,7 +47,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -67,6 +67,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public JsonResult GetUsers()
         {
             return Json(UserService.GetUsers());
