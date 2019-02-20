@@ -2,7 +2,7 @@
 ### Add ViewModels for Account:
 1. ~RegisterViewModel~
 2. LoginViewModel
-3. ConfirmEmailViewModel
+3. ConfirmEmailViewModel -> just string, maybe?
 4. ResetPasswordViewModel
 5. ProfileViewModel
 6. EditProfileViewModel
