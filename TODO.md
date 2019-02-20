@@ -1,13 +1,7 @@
 # The main part
 ### Add ViewModels for Account:
-1. ~RegisterViewModel~
-2. LoginViewModel
-3. ConfirmEmailViewModel -> just string and code
-3. ForgotPasswordViewModel
-4. ResetPasswordViewModel
-5. ProfileViewModel
+5. ProfileViewModel - after adding Profiles to database
 6. EditProfileViewModel
-7. ChangePasswordViewModel
 ### Add Actions to Controller:
 (These tasks are more interesting because of dependencies on services which have to implement these tasks)
 1. Login
@@ -31,3 +25,11 @@
   10. ChangePassword
 ## DONE
 1. Test if AspNet.Identity services are working properly with redefined IDs. (They were changed from default string ti int)
+
+### Add ViewModels for Account:
+1. ~RegisterViewModel~
+2. ~LoginViewModel~
+3. ~ConfirmEmailViewModel~ -> just string and code
+3. ~ForgotPasswordViewModel~
+4. ~ResetPasswordViewModel~
+7. ~ChangePasswordViewModel~
