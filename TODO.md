@@ -1,5 +1,5 @@
 # The main part
-1. Add View Pages for Account:
+### Add View Pages for Account:
   1. Register
   2. Login
   3. RegisterSuccessful
