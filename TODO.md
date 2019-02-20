@@ -7,7 +7,14 @@
 5. ProfileViewModel
 6. EditProfileViewModel
 7. ChangePasswordViewModel
-
+### Add Actions to Controller:
+(These tasks are more interesting because of dependencies on services which have to implement these tasks)
+1. Login
+2. ConfirmEmail
+3. ResetPassword
+4. Profile
+5. EditProfile
+6. ChangePassword
 ### Add View Pages for Account:
   1. Register
   2. Login
