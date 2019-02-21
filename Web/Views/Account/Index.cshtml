@@ -1,0 +1,88 @@
+﻿@model Web.Models.Account.AccountViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@helper ActionPanel()
+{
+    /**/
+    <div class="form-group">
+        <div class="col-md-1">
+            @Html.ActionLink("Edit profile", "EditProfile", null, new { @class = "btn btn-primary", title = "Edit profile data" })
+        </div>
+        @*<div class="col-md-2">
+                @Html.ActionLink("Delete profile", "Delete", null, new { @class = "btn btn-warning", title = "Delete your profile" })
+            </div>*@
+    </div>
+}
+
+<div class="page-header">
+    @Html.LabelFor(m => m.UserName)
+    @Html.DisplayFor(m => m.UserName)
+</div>
+@ActionPanel()
+@Html.Partial("_ConfirmEmailConfirmation", Model)
+
+<form class="form-horizontal" role="form">
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserName)
+        <br />
+        <div class="col-md-10">
+            <p class="form-control left">@Model.UserName</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Status)
+        <br />
+        <div class="col-md-10">
+            <p class="form-control left">@Model.Status</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email)
+        <br />
+        <div class="col-md-10">
+            <p class="form-control left" id="email">
+                @Model.Email
+                @if (Model.EmailConfirmed)
+                {
+                    <script>
+                        var email = document.getElementById('email');
+                        email.title = "Your email is confirmed";
+                        email.className += " alert-success";
+                    </script>
+                    <span class="glyphicon glyphicon-ok" title="Your email is confirmed"></span>
+                }
+                else
+                {
+                    <script>
+                        var email = document.getElementById('email');
+                        email.title = "Your email is not confirmed";
+                        email.className += " alert-danger";
+                    </script>
+                    <span class="glyphicon glyphicon-remove" title="Your email is not confirmed"></span>
+                }
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.RegistrationDate)
+        <br />
+        <div class="col-md-10">
+            <p class="form-control left">@Model.RegistrationDate.ToShortDateString()</p>
+        </div>
+    </div>
+
+    @ActionPanel()
+</form>
+
+
+
+
+
+

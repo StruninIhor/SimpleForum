@@ -14,6 +14,9 @@ namespace Web.Models.Account
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set;  }
+        public string Password { get; set; }
+
+        [Required]
+        public bool RememberMe { get; set; }
     }
 }

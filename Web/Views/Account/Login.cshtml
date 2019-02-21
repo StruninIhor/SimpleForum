@@ -1,0 +1,43 @@
+﻿@model Web.Models.Account.LoginViewModel
+
+@{
+    ViewBag.Title = "Sign in";
+}
+
+<p class="center-block"><h2>Sign in</h2></p>
+
+@if (Request.IsAuthenticated)
+{
+    <p class="alert alert-danger">
+        Probably, you have no permission for that action, contact site administrator
+    </p>
+}
+
+<h1 class="text-center h3">Please sign in</h1>
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-inline", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary("", new { @class="text-danger alert-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email)
+        <div>
+            @Html.TextBoxFor(m => m.Email)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password)
+        <div>
+            @Html.PasswordFor(m => m.Password)
+        </div>
+    </div>
+    <div class="checkbox">
+        <label>@Html.CheckBoxFor(m => m.RememberMe) Remember me</label>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Sign in" />
+    </div>
+}
+<br />
+<h4 class="text-center">@Html.ActionLink("Forgot password", "ForgotPassword")</h4>
+

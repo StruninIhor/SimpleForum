@@ -262,3 +262,4 @@ __pycache__/
 
 #Web Configuration File
 Web/Web.config
+Secret.*

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using DataContract.Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,14 @@ namespace DataContract.Identity.Models
             // Add custom user claims here 
             return userIdentity;
         }
+
+        public bool IsBlocked { get; set; }
+
+        public virtual UserProfile Profile { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Topic> Topics { get; set; }
+        public virtual ICollection<Forum> Forums { get; set; }
+        public virtual ICollection<Article> Articles { get; set; }
     }
 }

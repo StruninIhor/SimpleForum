@@ -17,7 +17,9 @@ namespace DataAccessServices
         IUnitOfWork Database;
 
         public UserService(IUnitOfWork unit)
-        { Database = unit; }
+        {
+            Database = unit;
+        }
 
         public async Task<ClaimsIdentity> Authenticate(User userDto)
         {
@@ -60,7 +62,7 @@ namespace DataAccessServices
             }
             else
             {
-                return new OperationDetails(false, "User with the same email exists", "");
+                return new OperationDetails(false, "User with the same email exists", "Email");
             }
         }
 
@@ -85,6 +87,127 @@ namespace DataAccessServices
             }
         }
 
+        public async Task<string> GenerateConfirmationTokenAsync(int userId) => await Database.UserManager.GenerateEmailConfirmationTokenAsync(userId);
+
+        public async Task<User> GetUser(int id)
+        {
+            return Mapper.Map(await Database.UserManager.FindByIdAsync(id));
+        }
+
+        public async Task<User> GetUser(string email) => Mapper.Map(await Database.UserManager.FindByEmailAsync(email));
+
+        public async Task SendConfirmationMessageAsync(int userId, string confirmationLink)
+        {
+            await Database.UserManager.SendEmailAsync(userId, "Email address Confirmation",
+                "<p><b>MVC Test Forum Email confirmation</b></p>To complete the registration, click on the following link: <br />" +
+                "<a href=\"" + confirmationLink + "\">" + confirmationLink + "</a><br />If you didn't request for email confirm, just ignore this message.");
+        }
+
+        public async Task<OperationDetails> Update(User model)
+        {
+            var user = await Database.UserManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                user.Profile.EmailNotificationsEnabled = model.EmailNotificationsEnabled;
+                user.Profile.ForumNotificationsEnabled = model.ForumNotificationsEnabled;
+                user.Profile.SubscriptionEnabled = model.SubscriptionEnabled;
+                user.Profile.UserName = model.UserName;
+                user.Profile.Status = model.Status;
+                user.IsBlocked = model.IsBlocked;
+                
+                var result = await Database.UserManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return new OperationDetails(true, "User updated sucessfully", "");
+                }
+                else
+                {
+                    return new OperationDetails(false, GetErrorMessage(result), "", result.Errors);
+                }
+            }
+            else
+            {
+                return new OperationDetails(false, "User was not found", "");
+            }
+        }
+
+        public async Task<OperationDetails> ConfirmEmailAsync(int userId, string code)
+        {
+            if (code == null)
+            {
+                return new OperationDetails(false, "Code is incorrect", "code");
+            }
+            else if (await Database.UserManager.FindByIdAsync(userId) == null)
+            {
+                return new OperationDetails(false, "User was not found", "userId");
+            }
+            var result = await Database.UserManager.ConfirmEmailAsync(userId, code);
+            if (result.Succeeded)
+            {
+                return new OperationDetails(true, "Email was confirmed sucessfully", "");
+            }
+            else
+            {
+                return new OperationDetails(false, GetErrorMessage(result), "", result.Errors);
+            }
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(int userId) => await Database.UserManager.GeneratePasswordResetTokenAsync(userId);
+
+        public async Task SendResetPasswordMessageAsync(int userId, string confirmationLink)
+        {
+            await Database.UserManager.SendEmailAsync(userId, "Forum password reset",
+               "<p><b>MVC Test Forum password reset</b></p>To complete the password reset, click on the following link: <br />" +
+               "<a href=\"" + confirmationLink + "\">" + confirmationLink + "</a><br />If you didn't request for password reset, just ignore this message.");
+        }
+
+        public async Task<OperationDetails> ResetPasswordAsync(int id, string code, string newPassword)
+        {
+            var result = await Database.UserManager.ResetPasswordAsync(id, code, newPassword);
+
+            if (result.Succeeded)
+            {
+                return new OperationDetails(true, "Password was sucessfully reset", "");
+            }
+            else
+            {
+                return new OperationDetails(false, GetErrorMessage(result), "", result.Errors);
+            }
+        }
+
+        public async Task<OperationDetails> Delete(int userId)
+        {
+            var user = await Database.UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new OperationDetails(false, "User was not found", "");
+            }
+            else
+            {
+                var result = await Database.UserManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return new OperationDetails(true, "User was deleted sucessfully", "");
+                }
+                else
+                {
+                    return new OperationDetails(false, GetErrorMessage(result), "", result.Errors);
+                }
+            }
+        }
+
+        public async Task<OperationDetails> Delete(string Email)
+        {
+            var user = await Database.UserManager.FindByEmailAsync(Email);
+            if (user == null)
+            {
+                return new OperationDetails(false, "User was not found", "");
+            }
+            else return await Delete(user.Id);
+        }
+        public async Task<bool> UserExists(string Email) => await Database.UserManager.FindByEmailAsync(Email) != null;
+
         public List<string> GetUsers()
         {
             var users = Database.UserManager.Users;
@@ -96,6 +219,14 @@ namespace DataAccessServices
             }
             return result;
         }
+
+        #region Helpers
+
+        string GetErrorMessage(IdentityResult result) => (result.Errors.Count() > 1) ?
+                        "Multiple errors were encountered while processing your request"
+                        : "An error encountered while processing your request";
+
+        #endregion
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -122,6 +253,8 @@ namespace DataAccessServices
         {
             Dispose(true);
         }
+
+       
         #endregion
 
     }

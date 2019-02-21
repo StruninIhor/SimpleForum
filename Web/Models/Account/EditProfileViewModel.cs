@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace DataAccessServices.Models
+namespace Web.Models.Account
 {
-    public class User
+    public class EditProfileViewModel
     {
-        public int Id { get; set; }
+        [Editable(false)]
         public string Email { get; set; }
-        public bool EmailConfirmed { get; set; }
-        public string Password { get; set; }
-        public bool IsBlocked { get; set; }
 
-        public DateTime RegistrationDate { get; set; }
+        [Required]
         public string UserName { get; set; }
 
+        [Required]
         public string Status { get; set; }
 
+        [Required]
         public bool EmailNotificationsEnabled { get; set; }
+        [Required]
         public bool ForumNotificationsEnabled { get; set; }
+        [Required]
         public bool SubscriptionEnabled { get; set; }
     }
 }

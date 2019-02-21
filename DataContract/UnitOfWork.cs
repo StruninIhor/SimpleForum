@@ -14,17 +14,21 @@ namespace DataContract
 
         AppUserManager userManager;
         AppRoleManager roleManager;
+        IClientManager clientManager;
 
         public UnitOfWork(string connectionString)
         {
             Database = new ApplicationContext(connectionString);
             userManager = new AppUserManager(new CustomUserStore(Database));
             roleManager = new AppRoleManager(new CustomRoleStore(Database));
+            clientManager = new ClientManager(Database);
         }
 
         public AppUserManager UserManager => userManager;
 
         public AppRoleManager RoleManager => roleManager;
+
+        public IClientManager ClientManager => clientManager;
 
         public void Save()
         {
