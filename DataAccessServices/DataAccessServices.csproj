@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\OperationDetails.cs" />
-    <Compile Include="Interfaces\ICrudService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Mapper.cs" />
     <Compile Include="Models\ArticleModel.cs" />

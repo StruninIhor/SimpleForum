@@ -11,7 +11,7 @@ namespace DataContract.Interfaces
     {
         AppUserManager UserManager { get; }
         AppRoleManager RoleManager { get; }
-        IClientManager ClientManager { get; }
+        IProfileManager ProfileManager { get; }
         void Save();
         Task SaveAsync();
     }

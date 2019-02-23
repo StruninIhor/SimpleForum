@@ -48,13 +48,21 @@ namespace DataAccessServices
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 }
 
-                if (await Database.RoleManager.FindByNameAsync("user") == null)
-                {
-                    await Database.RoleManager.CreateAsync(new DataContract.Identity.Models.CustomRole("user"));
-                    await Database.SaveAsync();
-                }
+                await CreateRoleIfNotExists("user");
 
                 await Database.UserManager.AddToRoleAsync(user.Id, "user");
+
+                Database.ProfileManager.Create(new DataContract.Models.UserProfile
+                {
+                    AppUser = user,
+                    RegistrationDate = DateTime.Now,
+                    UserName = userDto.UserName,
+                    Status = userDto.Status,
+                    EmailNotificationsEnabled = userDto.EmailNotificationsEnabled,
+                    ForumNotificationsEnabled = userDto.ForumNotificationsEnabled,
+                    SubscriptionEnabled = userDto.SubscriptionEnabled
+                });
+
 
                 //TODO Some actions with user profile (in future)
                 await Database.SaveAsync();
@@ -66,35 +74,51 @@ namespace DataAccessServices
             }
         }
 
+        async Task CreateRoleIfNotExists(string roleName)
+        {
+            var role = await Database.RoleManager.FindByNameAsync(roleName);
+            if (role == null)
+            {
+                role = new DataContract.Identity.Models.CustomRole(roleName);
+                await Database.RoleManager.CreateAsync(role);
+            }
+        }
+
         public async Task SetInitialData(User adminDto, List<string> roles)
         {
             foreach (string roleName in roles)
             {
-                var role = await Database.RoleManager.FindByNameAsync(roleName);
-                if (role == null)
-                {
-                    role = new DataContract.Identity.Models.CustomRole(roleName);
-                    await Database.RoleManager.CreateAsync(role);
-                }
-                await Create(adminDto);
-
-                var admin = await Database.UserManager.FindByEmailAsync(adminDto.Email);
-                if (admin != null)
-                {
-                    await Database.UserManager.AddToRoleAsync(admin.Id, "admin");
-                }
-                await Database.SaveAsync();
+                await CreateRoleIfNotExists(roleName);
+            }
+            await Create(adminDto);
+            var admin = await Database.UserManager.FindByEmailAsync(adminDto.Email);
+            if (admin != null)
+            {
+                string adminRoleName = "admin";
+                string superRoleName = "superadmin";
+                await CreateRoleIfNotExists(adminRoleName);
+                await CreateRoleIfNotExists(superRoleName);
+                await Database.UserManager.AddToRolesAsync(admin.Id, adminRoleName, superRoleName);
             }
         }
 
-        public async Task<string> GenerateConfirmationTokenAsync(int userId) => await Database.UserManager.GenerateEmailConfirmationTokenAsync(userId);
+        public Task<string> GenerateConfirmationTokenAsync(int userId) => Database.UserManager.GenerateEmailConfirmationTokenAsync(userId);
+
+        public string GenerateConfirmationToken(int userId)
+        {
+            return Database.UserManager.GenerateEmailConfirmationToken(userId);
+        }
 
         public async Task<User> GetUser(int id)
         {
             return Mapper.Map(await Database.UserManager.FindByIdAsync(id));
         }
 
-        public async Task<User> GetUser(string email) => Mapper.Map(await Database.UserManager.FindByEmailAsync(email));
+        public async Task<User> GetUser(string email)
+        {
+            var user = await Database.UserManager.FindByEmailAsync(email);
+            return (user != null) ? Mapper.Map(user) : null;
+        }
 
         public async Task SendConfirmationMessageAsync(int userId, string confirmationLink)
         {
@@ -154,6 +178,8 @@ namespace DataAccessServices
         }
 
         public async Task<string> GeneratePasswordResetTokenAsync(int userId) => await Database.UserManager.GeneratePasswordResetTokenAsync(userId);
+
+        public string GeneratePasswordResetToken(int userId) => Database.UserManager.GeneratePasswordResetToken(userId);
 
         public async Task SendResetPasswordMessageAsync(int userId, string confirmationLink)
         {

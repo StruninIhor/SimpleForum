@@ -225,6 +225,18 @@
     <Content Include="Views\Account\_ConfirmEmailConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmailLinkSent.cshtml" />
+    <Content Include="Views\Account\SuccessfulRegistration.cshtml" />
+    <Content Include="Views\Account\_PartialTextIfAuthenticated.cshtml" />
+    <Content Include="Views\Account\ConfirmEmailSucessful.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\EditProfile.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordLinkSent.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordSuccessful.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccessful.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

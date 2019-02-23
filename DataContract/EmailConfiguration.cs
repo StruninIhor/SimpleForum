@@ -4,19 +4,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataContract.Interfaces;
 
 namespace DataContract
 {
-    public static class EmailConfiguration
+    public class EmailConfiguration : IEmailConfiguration
     {
-        public static string UserName { get => ConfigurationSettings.AppSettings["UserName"]; }
+        public EmailConfiguration(string emailAddress, string password, string smtpServer, int port = 587, string displayName = "MVC Test Forum")
+        {
+            UserName = emailAddress;
+            Password = password;
+            SmtpServer = smtpServer;
+            Port = port;
+            DisplayName = displayName;
+        }
 
-        public static string Password { get => ConfigurationSettings.AppSettings["Password"]; }
+        public string UserName { get; private set; }
 
-        public static string DisplayName { get => ConfigurationSettings.AppSettings["DisplayName"]; }
+        public string Password { get; private set; }
 
-        public static string SmtpServer { get => ConfigurationSettings.AppSettings["SmtpServer"]; }
+        public string DisplayName { get; private set; }
 
-        public static int Port { get => int.Parse(ConfigurationSettings.AppSettings["Port"]); }
+        public string SmtpServer { get; private set; }
+
+        public int Port { get; private set; }
     }
 }

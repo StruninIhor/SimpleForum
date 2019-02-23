@@ -88,7 +88,9 @@
     <Compile Include="Identity\Models\CustomUserClaim.cs" />
     <Compile Include="Identity\Models\CustomUserLogin.cs" />
     <Compile Include="Identity\Models\CustomUserRole.cs" />
-    <Compile Include="Interfaces\IClientManager.cs" />
+    <Compile Include="Identity\ProfileManager.cs" />
+    <Compile Include="Interfaces\IEmailConfiguration.cs" />
+    <Compile Include="Interfaces\IProfileManager.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Migrations\201902192019428_v0.cs" />
     <Compile Include="Migrations\201902192019428_v0.Designer.cs">
@@ -101,6 +103,10 @@
     <Compile Include="Migrations\201902201746325_v0.1_newModels.cs" />
     <Compile Include="Migrations\201902201746325_v0.1_newModels.Designer.cs">
       <DependentUpon>201902201746325_v0.1_newModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902211901052_v0.1.identity_updated.cs" />
+    <Compile Include="Migrations\201902211901052_v0.1.identity_updated.Designer.cs">
+      <DependentUpon>201902211901052_v0.1.identity_updated.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Article.cs" />
@@ -115,7 +121,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Secret.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201902192019428_v0.resx">
@@ -126,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902201746325_v0.1_newModels.resx">
       <DependentUpon>201902201746325_v0.1_newModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902211901052_v0.1.identity_updated.resx">
+      <DependentUpon>201902211901052_v0.1.identity_updated.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,17 +4,16 @@
     ViewBag.Title = "Sign in";
 }
 
-<p class="center-block"><h2>Sign in</h2></p>
-
+<p class="text-center h2">Sign in</p>
+<hr />
 @if (Request.IsAuthenticated)
 {
-    <p class="alert alert-danger">
+    <p class="alert alert-danger text-center h3">
         Probably, you have no permission for that action, contact site administrator
     </p>
+    <hr />
 }
-
-<h1 class="text-center h3">Please sign in</h1>
-@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-inline", role = "form" }))
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", align="center" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary("", new { @class="text-danger alert-danger" })
@@ -33,11 +32,11 @@
     <div class="checkbox">
         <label>@Html.CheckBoxFor(m => m.RememberMe) Remember me</label>
     </div>
-
+    <hr />
     <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Sign in" />
+        <input type="submit" class="btn btn-primary btn-lg" value="Sign in" />
     </div>
 }
 <br />
-<h4 class="text-center">@Html.ActionLink("Forgot password", "ForgotPassword")</h4>
+<h4 class="text-center">@Html.ActionLink("Forgot password?", "ForgotPassword")</h4>
 

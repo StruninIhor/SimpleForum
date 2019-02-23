@@ -17,11 +17,13 @@ namespace DataAccessServices.Interfaces
         Task<User> GetUser(int id);
         Task<User> GetUser(string Email);
         Task<string> GenerateConfirmationTokenAsync(int userId);
+        string GenerateConfirmationToken(int userId);
         Task SendConfirmationMessageAsync(int userId, string confirmationLink);
         Task<OperationDetails> Update(User model);
         Task<OperationDetails> ConfirmEmailAsync(int userId, string code);
 
         Task<string> GeneratePasswordResetTokenAsync(int userId);
+        string GeneratePasswordResetToken(int userId);
         Task SendResetPasswordMessageAsync(int userId, string confirmationLink);
         Task<OperationDetails> ResetPasswordAsync(int id, string code, string newPassword);
 

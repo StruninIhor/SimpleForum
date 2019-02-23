@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 
 namespace Web.Util
 {
@@ -19,7 +20,9 @@ namespace Web.Util
             {
                 if (kernel == null)
                 {
-                    NinjectModule serviceModule = new ServiceModule("DefaultConnection");
+                    NinjectModule serviceModule = new ServiceModule("DefaultConnection", WebConfigurationManager.AppSettings["SmtpServer"], 
+                        WebConfigurationManager.AppSettings["EmailAddress"],
+                        WebConfigurationManager.AppSettings["Password"]);
                     //TODO Create ForumModule
                     kernel = new StandardKernel(serviceModule);
                 }

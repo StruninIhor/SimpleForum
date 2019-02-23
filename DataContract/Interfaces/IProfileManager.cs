@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataContract.Interfaces
 {
-    public interface IClientManager : IDisposable
+    public interface IProfileManager : IDisposable
     {
         void Create(UserProfile item);
     }

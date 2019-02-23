@@ -10,6 +10,7 @@ namespace Web.Models.Account
     {
         [Required]
         [EmailAddress(ErrorMessage = "Email address is incorrect")]
+        [Display(Name = "Email address")]
         public string Email { get; set; }
 
         [Required]
@@ -17,6 +18,7 @@ namespace Web.Models.Account
         public string Password { get; set; }
 
         [Required]
+        [Display(Name = "Remember me")]
         public bool RememberMe { get; set; }
     }
 }

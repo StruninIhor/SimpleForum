@@ -1,5 +1,8 @@
 ﻿using DataContract.Identity;
+using DataContract.Identity.Models;
 using DataContract.Interfaces;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,21 +17,54 @@ namespace DataContract
 
         AppUserManager userManager;
         AppRoleManager roleManager;
-        IClientManager clientManager;
+        IProfileManager clientManager;
 
-        public UnitOfWork(string connectionString)
+        public UnitOfWork(string connectionString, IEmailConfiguration emailConfiguration)
         {
             Database = new ApplicationContext(connectionString);
-            userManager = new AppUserManager(new CustomUserStore(Database));
             roleManager = new AppRoleManager(new CustomRoleStore(Database));
             clientManager = new ClientManager(Database);
+
+            userManager = new AppUserManager(new CustomUserStore(Database));
+
+            userManager.UserValidator = new UserValidator<AppUser, int>(userManager)
+            {
+                AllowOnlyAlphanumericUserNames = false,
+                RequireUniqueEmail = true
+            };
+
+            userManager.PasswordValidator = new PasswordValidator
+            {
+                RequiredLength = 6,
+                RequireNonLetterOrDigit = false,
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false
+            };
+
+            userManager.RegisterTwoFactorProvider("PhoneCode",
+                new PhoneNumberTokenProvider<AppUser, int>
+                {
+                    MessageFormat = "MVC forum security code is: {0}"
+                });
+            userManager.RegisterTwoFactorProvider("EmailCode",
+                new EmailTokenProvider<AppUser, int>
+                {
+                    Subject = "MVC Forum security code",
+                    BodyFormat = "MVC forum security code is: {0}"
+                });
+            userManager.EmailService = new IdentityEmailService(emailConfiguration);
+            Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider dataProtectionProvider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("MVC Forum");
+
+            userManager.UserTokenProvider = new DataProtectorTokenProvider<AppUser, int>(
+                dataProtectionProvider.Create("ASP.NET Identity"));
         }
 
         public AppUserManager UserManager => userManager;
 
         public AppRoleManager RoleManager => roleManager;
 
-        public IClientManager ClientManager => clientManager;
+        public IProfileManager ProfileManager => clientManager;
 
         public void Save()
         {

@@ -11,6 +11,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Host.SystemWeb;
 using Microsoft.AspNet.Identity.Owin;
+using System.Web.Configuration;
 
 namespace Web.Controllers
 {
@@ -32,10 +33,34 @@ namespace Web.Controllers
             }
         }
 
+        bool init = false;
+
+        async Task initAdmin()
+        {
+            if (!init)
+            {
+                await UserService.SetInitialData(new DataAccessServices.Models.User
+                {
+                    Email = WebConfigurationManager.AppSettings["AdminEmail"],
+                    Password = WebConfigurationManager.AppSettings["AdminPassword"],
+                    RegistrationDate = DateTime.Now,
+                    Status = "Vi veri universum vivus vici",
+                    UserName = "admin",
+                    EmailNotificationsEnabled = false,
+                    ForumNotificationsEnabled = false,
+                    SubscriptionEnabled = false
+                },
+            new List<string> { "user", "admin", "superadmin", "moderator" });
+
+                init = true;
+            }
+        }
         // GET: Account
         [Authorize]
         public async Task<ActionResult> Index()
         {
+            await initAdmin();
+
             var user = await UserService.GetUser(User.Identity.Name);
 
             if (user == null)
@@ -44,6 +69,7 @@ namespace Web.Controllers
             }
             AccountViewModel model = new AccountViewModel
             {
+                Id = user.Id,
                 Email = user.Email,
                 RegistrationDate = user.RegistrationDate,
                 Status = user.Status,
@@ -64,13 +90,23 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            await initAdmin();
             if (ModelState.IsValid)
             {
-                var result = await UserService.Create(new User { Email = model.Email, Password = model.Password });
+                var result = await UserService.Create(new User
+                {
+                    Email = model.Email,
+                    Password = model.Password,
+                    Status = model.Status,
+                    UserName = model.UserName,
+                    EmailNotificationsEnabled = model.EmailNotificationsEnabled,
+                    ForumNotificationsEnabled = model.ForumNotificationsEnabled,
+                    SubscriptionEnabled = model.SubscriptionEnabled
+                });
 
                 if (result.Succedeed)
                 {
-                    return View("Home", "Index");
+                    return View("SuccessfulRegistration");
                 }
                 else
                 {
@@ -91,22 +127,28 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
+            await initAdmin();
             if (ModelState.IsValid)
             {
                 if (await UserService.UserExists(model.Email))
                 {
                     var claim = await UserService.Authenticate(new User { Email = model.Email, Password = model.Password });
-                    AuthenticationManager.SignOut();
-                    AuthenticationManager.SignIn(new AuthenticationProperties
+                    if (claim != null)
                     {
-                        IsPersistent = model.RememberMe
-                    }, claim);
-                    return RedirectToLocal(ViewBag.ReturnUrl);
+
+                        AuthenticationManager.SignOut();
+                        AuthenticationManager.SignIn(new AuthenticationProperties
+                        {
+                            IsPersistent = model.RememberMe
+                        }, claim);
+                        return RedirectToLocal(ViewBag.ReturnUrl);
+                    }
                 }
                 ModelState.AddModelError("", "Incorrect login or password");
             }
             return View(model);
         }
+
 
         [HttpGet]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
@@ -123,20 +165,21 @@ namespace Web.Controllers
             }
         }
 
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmEmail(int userId)
+        public async Task<ActionResult> ConfirmEmail(int Id)
         {
-            var code = await UserService.GenerateConfirmationTokenAsync(userId);
+            var code = await UserService.GenerateConfirmationTokenAsync(Id);
 
             var link = Url.Action("ConfirmEmail", "Account", new
             {
-                userId,
+                userId = Id,
                 code
             }, protocol: Request.Url.Scheme);
 
-            await UserService.SendConfirmationMessageAsync(userId, link);
+            await UserService.SendConfirmationMessageAsync(Id, link);
 
             return View("ConfirmEmailLinkSent");
         }
@@ -156,7 +199,7 @@ namespace Web.Controllers
                 var user = await UserService.GetUser(model.Email);
                 if (user != null)
                 {
-                    string code = await UserService.GeneratePasswordResetTokenAsync(user.Id);
+                    string code = UserService.GeneratePasswordResetToken(user.Id);
 
                     var resetLink = Url.Action("ResetPassword", "Account", new { userId = user.Id, code });
 
@@ -208,7 +251,7 @@ namespace Web.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpPost]
         public ActionResult Logout()
         {
             AuthenticationManager.SignOut();
@@ -242,20 +285,62 @@ namespace Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<ActionResult> EditProfile(EditProfileViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = await UserService.GetUser(model.Email);
+
                 if (user == null)
                 {
                     return View("Error");
                 }
 
-                if (UserService.Authenticate(new DataAccessServices.Models.User { Email = model.Email, Password = model.OldPassword}) != null)
+                user.EmailNotificationsEnabled = model.EmailNotificationsEnabled;
+                user.ForumNotificationsEnabled = model.ForumNotificationsEnabled;
+                user.Status = model.Status;
+                user.SubscriptionEnabled = model.SubscriptionEnabled;
+                user.UserName = model.UserName;
+
+                var result = await UserService.Update(user);
+
+                if (result.Succedeed)
+                {
+                    return RedirectToAction("EditProfile");
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserService.GetUser(User.Identity.Name);
+                if (user == null)
+                {
+                    return View("Error");
+                }
+
+                if (UserService.Authenticate(new DataAccessServices.Models.User { Email = user.Email, Password = model.Password}) != null)
                 {
                     var result =  await UserService.ResetPasswordAsync(user.Id,
-                    await UserService.GeneratePasswordResetTokenAsync(user.Id), model.NewPassword);
+                    UserService.GeneratePasswordResetToken(user.Id), model.NewPassword);
 
                     if (result.Succedeed)
                     {
@@ -268,7 +353,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("OldPassword", "Incorrect password");
+                    ModelState.AddModelError("Password", "Incorrect password");
                 }
             }
             return View(model);

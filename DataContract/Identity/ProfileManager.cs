@@ -6,16 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataContract
+namespace DataContract.Identity
 {
-    public class ClientManager : IProfileManager
+    public class ProfileManager : IProfileManager
     {
-        public ApplicationContext Database;
+        public ApplicationContext Database { get; set; }
 
-        public ClientManager(ApplicationContext db)
+        public ProfileManager(ApplicationContext db)
         {
             Database = db;
         }
+
 
         public void Create(UserProfile item)
         {

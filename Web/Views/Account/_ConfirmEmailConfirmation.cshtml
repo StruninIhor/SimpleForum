@@ -17,6 +17,7 @@
 
 <form method="post" action="/Account/ConfirmEmail">
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
     <div class="modal fade" id="confirmEmailConfirmation" tabindex="-1" role="dialog" aria-labelledby="confirmEmailLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

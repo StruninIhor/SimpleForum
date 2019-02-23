@@ -1,5 +1,6 @@
 ﻿using DataAccessServices.Interfaces;
 using DataContract;
+using DataContract.Identity;
 using DataContract.Interfaces;
 using Ninject.Modules;
 using System;
@@ -13,14 +14,27 @@ namespace DataAccessServices.Modules
     public class ServiceModule : NinjectModule
     {
         private string connectionString;
-        public ServiceModule(string connection)
+        string emailAddress;
+        string password;
+        string smtpServer;
+        IEmailConfiguration emailConfiguration;
+        public ServiceModule(string connection, string smtpServer, string emailAddress, string password)
         {
             connectionString = connection;
+            this.emailAddress = emailAddress;
+            this.password = password;
+            this.smtpServer = smtpServer;
+            this.emailConfiguration = new EmailConfiguration(emailAddress, password, smtpServer);
         }
         public override void Load()
         {
-            Bind<IUnitOfWork>().To<UnitOfWork>().WithConstructorArgument(connectionString);
+            Bind<IEmailConfiguration>().To<EmailConfiguration>().WithConstructorArgument(emailAddress)
+                .WithConstructorArgument(password)
+                .WithConstructorArgument(smtpServer);
+            Bind<IUnitOfWork>().To<UnitOfWork>().WithConstructorArgument(connectionString)
+                .WithConstructorArgument(emailConfiguration);
             Bind<IUserService>().To<UserService>();
+            Bind<IProfileManager>().To<ProfileManager>();
         }
     }
 }
