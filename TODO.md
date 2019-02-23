@@ -1,16 +1,12 @@
 ## DataContract
 ### Add avatar field to AppUser (postponed)
-### Add Forum and Topic Controllers
+# Find out why Forum is passed into ForumService/GetForum(int id) incorrectly (it doesn't include topics properly')
+### Add Topic Controller
 
 ### Add manage(admin) Controller
 
 ## DataAccessServices
-### Create ForumService and following actions:
-1. Create
-2. Update
-3. Delete
-4. AddTopic <---
-5. GetForumById
+
 
 And similar services for article, and topic
 

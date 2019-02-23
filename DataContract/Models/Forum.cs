@@ -10,6 +10,6 @@ namespace DataContract.Models
         }
 
         public string Name { get; set; }
-        public ICollection<Topic> Topics { get; set; }
+        public virtual ICollection<Topic> Topics { get; set; }
     }
 }

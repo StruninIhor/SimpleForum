@@ -39,7 +39,6 @@ namespace DataContract
         public Forum GetById(int id)
         {
             var result = db.Forums.Find(id);
-            //result.Topics = db.Topics.Where(t => t.ForumId == result.Id).ToList(); Why is not working without this?
             return result;
         }
 
