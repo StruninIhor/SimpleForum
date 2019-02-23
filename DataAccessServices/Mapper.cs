@@ -13,6 +13,8 @@ namespace DataAccessServices
     {
         public static User Map(AppUser user)
         {
+            if (user == null) return null;
+
             return new User
             {
                 Id = user.Id,
@@ -30,11 +32,13 @@ namespace DataAccessServices
 
         public static CommentModel Map(Comment comment, bool includeReplies = true)
         {
+            if (comment == null) return null;
             var result = new CommentModel
             {
                 Id = comment.Id,
                 AuthorId = comment.AuthorId,
                 CreatedDate = comment.CreatedDate,
+                CreatedDateString = comment.CreatedDate.ToShortDateString(),
                 Order = comment.Order,
                 ReplyToCommentId = comment.ReplyToCommentId,
                 Text = comment.Text,
@@ -55,12 +59,14 @@ namespace DataAccessServices
 
         public static TopicModel Map(Topic topic)
         {
+            if (topic == null) return null;
             var result = new TopicModel
             {
                 Id = topic.Id,
                 AuthorId = topic.AuthorId,
                 Comments = new List<CommentModel>(),
                 CreatedDate = topic.CreatedDate,
+                CreatedDateString = topic.CreatedDate.ToShortDateString(),
                 ForumId = topic.ForumId,
                 Name = topic.Name,
                 Text = topic.Text
@@ -75,11 +81,13 @@ namespace DataAccessServices
 
         public static ForumModel Map(Forum forum)
         {
+            if (forum == null) return null;
             var result = new ForumModel
             {
                 Id = forum.Id,
                 AuthorId = forum.AuthorId,
                 CreatedDate = forum.CreatedDate,
+                CreatedDateString = forum.CreatedDate.ToShortDateString(),
                 Name = forum.Name,
                 Topics = new List<TopicModel>()
             };
@@ -90,11 +98,25 @@ namespace DataAccessServices
                 {
                     Id = topic.Id,
                     AuthorId = topic.AuthorId,
-                    CreatedDate = topic.CreatedDate
+                    CreatedDate = topic.CreatedDate,
+                    CreatedDateString = topic.CreatedDate.ToShortDateString()
                 });
             }
             return result;
 
+        }
+
+        public static ArticleModel Map(Article article)
+        {
+            return new ArticleModel
+            {
+                Id = article.Id,
+                AuthorId = article.AuthorId,
+                CreatedDate = article.CreatedDate,
+                CreatedDateString = article.CreatedDate.ToShortDateString(),
+                Name = article.Name,
+                Text = article.Text
+            };
         }
 
     }

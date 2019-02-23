@@ -1,6 +1,7 @@
 ﻿using DataContract.Identity;
 using DataContract.Identity.Models;
 using DataContract.Interfaces;
+using DataContract.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -18,6 +19,10 @@ namespace DataContract
         AppUserManager userManager;
         AppRoleManager roleManager;
         IProfileManager clientManager;
+        IRepository<Forum> forumRepository;
+        IRepository<Article> articleRepository;
+        IRepository<Topic> topicRepository;
+        IRepository<Comment> commentRepository;
 
         public UnitOfWork(string connectionString, IEmailConfiguration emailConfiguration)
         {
@@ -65,6 +70,54 @@ namespace DataContract
         public AppRoleManager RoleManager => roleManager;
 
         public IProfileManager ProfileManager => clientManager;
+
+        public IRepository<Forum> Forums
+        {
+            get
+            {
+                if (forumRepository == null)
+                {
+                    forumRepository = new ForumRepository(Database);
+                }
+                return forumRepository;
+            }
+        }
+
+        public IRepository<Article> Articles
+        {
+            get
+            {
+                if (articleRepository == null)
+                {
+                    articleRepository = new ArticleRepository(Database);
+                }
+                return articleRepository;
+            }
+        }
+
+        public IRepository<Topic> Topics
+        {
+            get
+            {
+                if (topicRepository == null)
+                {
+                    topicRepository = new TopicRepository(Database);
+                }
+                return topicRepository;
+            }
+        }
+
+        public IRepository<Comment> Comments
+        {
+            get
+            {
+                if (commentRepository == null)
+                {
+                    commentRepository = new CommentRepository(Database);
+                }
+                return commentRepository;
+            }
+        }
 
         public void Save()
         {

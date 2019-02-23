@@ -1,0 +1,32 @@
+﻿@model DataAccessServices.Models.ForumModel
+
+@{
+    ViewBag.Title = $"Forum {Model.Name}";
+}
+
+<h2 class="text-center">@Model.Name</h2>
+
+<div>
+    @if (User.IsInRole("admin"))
+    {
+        @Html.ActionLink("Add new topic", "AddTopic", new { forumId = Model.Id}, new { @class = "btn btn-default" })
+    }
+    <table id="topics" class="table table-hover">
+        <thead>
+            <tr>
+                <th>Topic</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var topic in Model.Topics)
+            {
+                <tr>
+                    <th>
+                        @Html.ActionLink(topic.Name??"null", "Index", "Topic", null, new { topicId = topic.Id })
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

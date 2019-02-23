@@ -12,6 +12,8 @@ namespace DataAccessServices.Models
 
         public DateTime CreatedDate { get; set; }
 
+        public string CreatedDateString { get; set; }
+
         public int AuthorId { get; set; }
     }
 }

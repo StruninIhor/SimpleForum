@@ -57,7 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArticleService.cs" />
+    <Compile Include="ForumService.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />
+    <Compile Include="Interfaces\IArticleService.cs" />
+    <Compile Include="Interfaces\IForumService.cs" />
+    <Compile Include="Interfaces\ITopicService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Mapper.cs" />
     <Compile Include="Models\ArticleModel.cs" />
@@ -67,18 +72,25 @@
     <Compile Include="Models\TopicModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Modules\ServiceModule.cs" />
+    <Compile Include="TopicService.cs" />
     <Compile Include="UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Scripts\jquery-1.12.4.min.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataContract\DataContract.csproj">
       <Project>{18BF54A1-7571-45B2-96A8-8AD1A0376A91}</Project>
       <Name>DataContract</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.12.4-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.12.4.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

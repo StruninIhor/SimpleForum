@@ -2,6 +2,7 @@
 using DataContract;
 using DataContract.Identity;
 using DataContract.Interfaces;
+using DataContract.Models;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace DataAccessServices.Modules
         }
         public override void Load()
         {
+            //Identity
             Bind<IEmailConfiguration>().To<EmailConfiguration>().WithConstructorArgument(emailAddress)
                 .WithConstructorArgument(password)
                 .WithConstructorArgument(smtpServer);
@@ -35,6 +37,11 @@ namespace DataAccessServices.Modules
                 .WithConstructorArgument(emailConfiguration);
             Bind<IUserService>().To<UserService>();
             Bind<IProfileManager>().To<ProfileManager>();
+
+            //Forum
+            Bind<IForumService>().To<ForumService>();
+            Bind<ITopicService>().To<TopicService>();
+            Bind<IArticleService>().To<ArticleService>();
         }
     }
 }
