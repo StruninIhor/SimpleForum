@@ -22,7 +22,7 @@
             {
                 <tr>
                     <th>
-                        @Html.ActionLink(topic.Name??"null", "Index", "Topic", null, new { topicId = topic.Id })
+                        @Html.ActionLink(topic.Name??"null", "Index", "Topic", new { topicId = topic.Id }, null)
                     </th>
                 </tr>
             }

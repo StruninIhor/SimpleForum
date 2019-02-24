@@ -82,7 +82,8 @@ namespace DataAccessServices
 
         public ForumModel GetForum(int id)
         {
-            return Mapper.Map(Database.Forums.GetById(id));
+            var result = Mapper.Map(Database.Forums.GetById(id));
+            return result;
         }
 
         public ICollection<ForumModel> GetForums()

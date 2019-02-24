@@ -25,7 +25,7 @@ namespace Web.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Developed by Strunin Ihor";
 
             return View();
         }
@@ -39,29 +39,43 @@ namespace Web.Controllers
 
         string Path(string item) => $"~/App_Data/{item}";
 
-        [HttpPost]
-        public JsonResult GetMenu()
+        public ActionResult NavigationMenuTest(bool modelBased = true)
+        {
+            if (modelBased)
+            {
+                return View(GetMenu());
+            }
+            return View("NavTestJson");
+        }
+
+        ICollection<MenuItem> GetMenu()
         {
             string listIcon = Path("List.ico");
-            var forumsItem = new MenuItem { Name = "Forums", Order = 0, Icon = listIcon };
-            var articlesItem = new MenuItem { Name = "Articles", Order = 0, Icon = listIcon };
+            var forumsItem = new MenuItem { Name = "Forums", Order = 0, Icon = listIcon, Id=Url.Action("Index", "Forum")};
+            var articlesItem = new MenuItem { Name = "Articles", Order = 0, Icon = listIcon, Id=Url.Action("Index", "Forum") };
             ICollection<MenuItem> items = new List<MenuItem>
                 {forumsItem, articlesItem};
             foreach (var forum in forumService.GetForums())
             {
-                var item = new MenuItem { Order = 1, Icon = Path("Forum.ico"), Name = forum.Name };
+                var item = new MenuItem { Order = 1, Icon = Path("Forum.ico"), Name = forum.Name, Id= Url.Action("GetForum", "Forum", new { id = forum.Id}), /*Parent = forumsItem,*/ ParentId = forumsItem.Id };
                 forumsItem.Children.Add(item);
 
                 foreach (var topic in forumService.GetForum(forum.Id).Topics)
                 {
-                    forumsItem.Children.Add(new MenuItem { Order = forumsItem.Order + 1, Name = topic.Name, Icon = Path("Topic.ico") });
+                    item.Children.Add(new MenuItem { Order = item.Order + 1, Name = topic.Name, Icon = Path("Topic.ico"), Id = Url.Action("GetTopic", "Topic", new { id = topic.Id }), /*Parent = item,*/ ParentId = item.Id });
                 }
             }
             foreach (var article in articleService.GetArticles())
             {
-                articlesItem.Children.Add(new MenuItem { Order = 1, Name = article.Name, Icon = Path("Article.ico") });
+                articlesItem.Children.Add(new MenuItem { Order = 1, Name = article.Name, Icon = Path("Article.ico"), Id = Url.Action("GetArticle", "Article", new { id = article.Id }), /*Parent = articlesItem,*/ ParentId = articlesItem.Id });
             }
-            return Json(new { data = items });
+            return items;
+        }
+
+        [HttpPost]
+        public JsonResult GetMenuJson()
+        {
+            return Json(GetMenu());
         }
 
     }

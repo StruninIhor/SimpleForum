@@ -50,7 +50,7 @@ namespace DataAccessServices
             {
                 foreach (var reply in comment.Replies)
                 {
-                    result.Replies.Add(Mapper.Map(reply));
+                    result.Replies.Add(Map(reply));
                 }
             }
             return result;
@@ -97,6 +97,9 @@ namespace DataAccessServices
                 result.Topics.Add(new TopicModel
                 {
                     Id = topic.Id,
+                    Name = topic.Name,
+                    Text = topic.Text,
+                    ForumId = topic.ForumId,
                     AuthorId = topic.AuthorId,
                     CreatedDate = topic.CreatedDate,
                     CreatedDateString = topic.CreatedDate.ToShortDateString()

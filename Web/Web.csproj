@@ -190,6 +190,12 @@
     <Compile Include="Util\KernelHolder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\custom.images\Article.ico" />
+    <Content Include="Content\custom.images\Book.ico" />
+    <Content Include="Content\custom.images\Forum.ico" />
+    <Content Include="Content\custom.images\githubLogo.png" />
+    <Content Include="Content\custom.images\List.ico" />
+    <Content Include="Content\custom.images\Topic.ico" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -373,6 +379,7 @@
     <Content Include="Views\Forum\Create.cshtml" />
     <Content Include="Views\Forum\GetForum.cshtml" />
     <Content Include="Views\Forum\AddTopic.cshtml" />
+    <Content Include="Views\Home\NavigationMenuTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
