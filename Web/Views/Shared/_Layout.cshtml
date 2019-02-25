@@ -24,6 +24,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Forums", "Index", "Forum")</li>
+                    <li>@Html.ActionLink("Articles", "Index", "Article")</li>
                     <li>@Html.ActionLink("Nav menu test", "NavigationMenuTest", "Home")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -34,7 +35,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - MVC Forum</p>
             <p><a href="https://github.com/StruninIhor/SimpleForum/" class="btn-link" title="GitHub page"><img src="~/Content/custom.images/githubLogo.png" style="width: 30px; height: auto;" /></a><br /></p>
         </footer>
     </div>

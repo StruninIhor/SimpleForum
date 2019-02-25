@@ -52,7 +52,7 @@ namespace Web.Controllers
         {
             string listIcon = Path("List.ico");
             var forumsItem = new MenuItem { Name = "Forums", Order = 0, Icon = listIcon, Id=Url.Action("Index", "Forum")};
-            var articlesItem = new MenuItem { Name = "Articles", Order = 0, Icon = listIcon, Id=Url.Action("Index", "Forum") };
+            var articlesItem = new MenuItem { Name = "Articles", Order = 0, Icon = listIcon, Id=Url.Action("Index", "Article") };
             ICollection<MenuItem> items = new List<MenuItem>
                 {forumsItem, articlesItem};
             foreach (var forum in forumService.GetForums())

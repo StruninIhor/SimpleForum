@@ -11,6 +11,35 @@ namespace DataAccessServices
 {
     internal static class Mapper
     {
+        //TODO: Implement reflection here
+        private static void MapObjects(object source, object destination, bool selectPrimitives = true)
+        {
+            Type sourceType = source.GetType();
+            Type destinationType = destination.GetType();
+
+            var sourceProperties = sourceType.GetProperties();
+            var destionationProperties = destinationType.GetProperties();
+
+            var commonProperties = from sp in sourceProperties
+                                   join dp in destionationProperties on new { sp.Name, sp.PropertyType } equals
+                                       new { dp.Name, dp.PropertyType }
+                                   select new { sp, dp };
+
+            foreach (var match in commonProperties)
+            {
+                if (selectPrimitives)
+                    if (match.sp.GetType().IsPrimitive)
+                    {
+                        match.dp.SetValue(destination, match.sp.GetValue(source, null), null);
+                    }
+                    else { }
+                else
+                {
+                    match.dp.SetValue(destination, match.sp.GetValue(source, null), null);
+                }
+            }
+        }
+
         public static User Map(AppUser user)
         {
             if (user == null) return null;

@@ -16,6 +16,8 @@ namespace DataAccessServices.Interfaces
         Task SetInitialData(User adminDto, List<string> roles);
         Task<User> GetUser(int id);
         Task<User> GetUser(string Email);
+        User GetUserById(int id);
+        User GetUserByEmail(string Email);
         Task<string> GenerateConfirmationTokenAsync(int userId);
         string GenerateConfirmationToken(int userId);
         Task SendConfirmationMessageAsync(int userId, string confirmationLink);

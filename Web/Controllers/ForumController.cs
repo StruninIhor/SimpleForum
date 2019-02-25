@@ -92,34 +92,52 @@ namespace Web.Controllers
                 return HttpNotFound();
             else
             {
-                return View(forum);
+                return View(new EditForumViewModel {Name = forum.Name, Id = forum.Id});
             }
         }
 
         [HttpPost]
         [Authorize(Roles = "admin, superadmin")]
-        public ActionResult EditForum(DataAccessServices.Models.ForumModel model)
+        public ActionResult EditForum(EditForumViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var result = forumService.Update(model);
-                if (result.Succedeed)
+                var forum = forumService.GetForum(model.Id);
+                if (forum!=null)
                 {
-                    return RedirectToAction("GetForum", new { id = model.Id});
+                    forum.Name = model.Name;
+                    var result = forumService.Update(forum);
+                    if (result.Succedeed)
+                    {
+                        return RedirectToAction("GetForum", new { id = model.Id });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", result.Message);
+                    }
                 }
-                else
-                {
-                    ModelState.AddModelError("", result.Message);
-                }
+                
+            }
+            else
+            {
+                ModelState.AddModelError("", "Forum was not found");
             }
             return View(model);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "admin, superadmin")]
+        [HttpGet]
+        [Authorize(Roles ="superadmin")]
         public ActionResult DeleteForum(int id)
         {
-            var result = forumService.Delete(id);
+            return View(new DeleteForumViewModel { Id = id});
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "superadmin")]
+        [ActionName("DeleteForum")]
+        public ActionResult DeleteForumConfirmed(DeleteForumViewModel model)
+        {
+            var result = forumService.Delete(model.Id);
 
             if (result.Succedeed)
             {

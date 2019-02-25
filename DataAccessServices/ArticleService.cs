@@ -73,12 +73,12 @@ namespace DataAccessServices
             return result;
         }
 
-        public TopicModel GetTopic(int id)
+        public ArticleModel GetArticle(int id)
         {
-            return Mapper.Map(Database.Topics.GetById(id));
+            return Mapper.Map(Database.Articles.GetById(id));
         }
 
-        public OperationDetails Update(TopicModel item)
+        public OperationDetails Update(ArticleModel item)
         {
             var article = Database.Articles.GetById(item.Id);
             if (article == null)

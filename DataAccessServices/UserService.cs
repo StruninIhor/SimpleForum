@@ -120,6 +120,18 @@ namespace DataAccessServices
             return (user != null) ? Mapper.Map(user) : null;
         }
 
+        public User GetUserById(int id)
+        {
+            var user = Database.UserManager.FindById(id);
+            return (user != null) ? Mapper.Map(user) : null;
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            var user = Database.UserManager.FindByEmail(email);
+            return (user != null) ? Mapper.Map(user) : null;
+        }
+
         public async Task SendConfirmationMessageAsync(int userId, string confirmationLink)
         {
             await Database.UserManager.SendEmailAsync(userId, "Email address Confirmation",

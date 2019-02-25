@@ -11,10 +11,10 @@ namespace DataAccessServices.Interfaces
     public interface IArticleService: IDisposable
     {
         Task<OperationDetails> Create(string name, string text, string authorEmail, bool force = false);
-        OperationDetails Update(TopicModel item);
+        OperationDetails Update(ArticleModel item);
         OperationDetails Delete(int id);
 
-        TopicModel GetTopic(int id);
+        ArticleModel GetArticle(int id);
 
         ICollection<ArticleModel> GetArticles();
     }

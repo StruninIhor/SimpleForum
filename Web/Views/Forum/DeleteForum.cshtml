@@ -1,0 +1,18 @@
+﻿@model Web.Models.Forum.DeleteForumViewModel
+
+@{
+    ViewBag.Title = "Delete forum";
+}
+
+<h2>ViewBag.Title</h2>
+
+@using (Html.BeginForm("DeleteForum", "Forum", FormMethod.Post))
+{
+<div class="text-center">
+    @Html.HiddenFor(m => m.Id)
+    <h3>Are you sure you want to delete this forum?</h3> <br />
+    @Html.ActionLink("No", "Index", null, new { @class = "btn btn-default" })
+    <input type="submit" value="Yes" class="btn btn-default" />
+</div>
+}
+

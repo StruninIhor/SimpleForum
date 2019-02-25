@@ -1,0 +1,29 @@
+﻿@model Web.Models.Forum.EditForumViewModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("EditForum", "Forum", FormMethod.Post, new { @class = "form-inline" }))
+{
+    @Html.ValidationSummary()
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name)
+    </div>
+
+    <input type="submit" value="Submit changes" class="btn btn-primary" />
+}
+
+@if (User.IsInRole("superadmin"))
+{
+    @Html.ActionLink("Delete", "DeleteForum", new { id = Model.Id}, new { @class="btn btn-danger"})
+}
+
+
+
+

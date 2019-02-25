@@ -153,13 +153,20 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
-            var result = await UserService.ConfirmEmailAsync(userId, code);
-
-            if (result.Succedeed)
+            try
             {
-                return View("ConfirmEmailSucessful");
+                var result = await UserService.ConfirmEmailAsync(userId, code);
+
+                if (result.Succedeed)
+                {
+                    return View("ConfirmEmailSucessful");
+                }
+                else
+                {
+                    return View("Error");
+                }
             }
-            else
+            catch
             {
                 return View("Error");
             }

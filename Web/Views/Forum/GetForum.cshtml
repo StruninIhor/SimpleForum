@@ -5,25 +5,45 @@
 }
 
 <h2 class="text-center">@Model.Name</h2>
-
+<h5 class="col-md-3">@Web.Helpers.AuthorHelper.GetAuthor(Model, Url.Action("GetUserProfile", "Account"))</h5>
 <div>
-    @if (User.IsInRole("admin"))
+    @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
     {
-        @Html.ActionLink("Add new topic", "AddTopic", new { forumId = Model.Id}, new { @class = "btn btn-default" })
+    <div class="row">
+        @Html.ActionLink("Add new topic", "AddTopic", new { forumId = Model.Id }, new { @class = "btn btn-default col-md-2" })
+        @Html.ActionLink("Edit forum", "EditForum", new { id = Model.Id }, new { @class = "btn btn-primary col-md-2" })
+    </div>
     }
-    <table id="topics" class="table table-hover">
+
+    
+
+    <table id="topics" class="table table-bordered">
         <thead>
             <tr>
-                <th>Topic</th>
+                <th class="success">Topic</th>
+                <th class="success">Created date</th>
+                @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+                {
+                    <th class="success">Delete</th>
+                }
             </tr>
         </thead>
         <tbody>
             @foreach (var topic in Model.Topics)
             {
                 <tr>
-                    <th>
-                        @Html.ActionLink(topic.Name??"null", "Index", "Topic", new { topicId = topic.Id }, null)
-                    </th>
+                    <td>
+                        @Html.ActionLink(topic.Name??"null", "Index", "Topic", new { id = topic.Id }, null)
+                    </td>
+                    <td>
+                        @topic.CreatedDateString
+                    </td>
+                    @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+                    {
+                        <td>
+                            @Html.ActionLink("Delete", "Delete", "Topic", new { id = topic.Id}, new { @class="btn btn-danger"})
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
