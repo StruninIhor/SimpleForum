@@ -4,7 +4,7 @@
 ### Add Topic Controller
 0. Index
 1. Topic(id) - here will be comments - test comments
-2. Create(id)
+2. Create()
 3. Edit(id)
 4. Delete(id)
 
