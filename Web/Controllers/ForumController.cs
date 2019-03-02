@@ -40,7 +40,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Authorize(Roles ="admin, superadmin")]
-         // [ValidateAntiForgeryToken]
+         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateViewModel model)
         {
             if (ModelState.IsValid)
@@ -98,6 +98,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin, superadmin")]
+        [ValidateAntiForgeryToken]
         public ActionResult EditForum(EditForumViewModel model)
         {
             if (ModelState.IsValid)
@@ -135,6 +136,7 @@ namespace Web.Controllers
         [HttpPost]
         [Authorize(Roles = "superadmin")]
         [ActionName("DeleteForum")]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteForumConfirmed(DeleteForumViewModel model)
         {
             var result = forumService.Delete(model.Id);
@@ -147,42 +149,6 @@ namespace Web.Controllers
             {
                 return View("Error");
             }
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "admin, superadmin")]
-        public ActionResult AddTopic(int forumId)
-        {
-            var model = new AddTopicViewModel{ ForumId = forumId, Force = false};
-            ViewBag.ForceMessage = false;
-            return View(model);
-        }
-
-        [HttpPost]
-         // [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin, superadmin")]
-        public async Task<ActionResult> AddTopic(AddTopicViewModel model)
-        {
-            ViewBag.ForceMessage = false;
-            if (ModelState.IsValid)
-            {
-                var result = await forumService.AddTopic(model.ForumId, model.Name, model.Text, User.Identity.Name);
-
-                if (result.Succedeed)
-                {
-                    return RedirectToAction("GetForum", new { id = model.ForumId });
-                }
-                else if (result.Property == "name")
-                {
-                    ViewBag.ForceMessage = true;
-                    ModelState.AddModelError("", "There is another topic with this name");
-                }
-                else
-                {
-                    ModelState.AddModelError("", result.Message);
-                }
-            }
-            return View(model);
         }
     }
 }

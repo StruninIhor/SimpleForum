@@ -4,8 +4,6 @@ using DataAccessServices.Models;
 using DataContract.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccessServices
@@ -19,7 +17,14 @@ namespace DataAccessServices
             Database = unit;
         }
 
-        public async Task<OperationDetails> Create(string name, string text, string authorEmail, bool force = false)
+        private bool ContainSripts(string someString)
+        {
+            if (someString.Contains("href=\"javascript:\""))
+                return true;
+            else return false;
+        }
+
+        public async Task<OperationDetails> Create(string name, string text, string authorEmail)
         {
             var user = await Database.UserManager.FindByEmailAsync(authorEmail);
 
@@ -27,11 +32,9 @@ namespace DataAccessServices
             {
                 return new OperationDetails(false, "Author was not found", "");
             }
-            var article = Database.Articles.Where(a => a.Name == name);
-
-            if (article != null && !force)
+            if (ContainSripts(text))
             {
-                return new OperationDetails(false, "There is another topic with the same name", "name");
+                return new OperationDetails(false, "Don't user scripts in article text!", "");
             }
             Database.Articles.Create(new DataContract.Models.Article
             {
@@ -89,6 +92,12 @@ namespace DataAccessServices
             {
                 return new OperationDetails(false, "Wrong author", "");
             }
+
+            if (ContainSripts(item.Text))
+            {
+                return new OperationDetails(false, "Don't user scripts in article text!", "");
+            }
+
             article.Name = item.Name;
             article.Text = item.Text;
             Database.Articles.Update(article);

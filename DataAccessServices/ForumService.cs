@@ -19,32 +19,6 @@ namespace DataAccessServices
             Database = unit;
         }
 
-        public async Task<OperationDetails> AddTopic(int forumId, string name, string text, string authorEmail, bool force = false)
-        {
-            var user = await Database.UserManager.FindByEmailAsync(authorEmail);
-
-            if (user == null)
-            {
-                return new OperationDetails(false, "Author was not found", "");
-            }
-
-            var forum = Database.Forums.GetById(forumId);
-
-            if (forum == null)
-            {
-                return new OperationDetails(false, "Forum was not found", "");
-            }
-
-            var topic = Database.Topics.Where(t => t.Name == name);
-            if (topic.Count() > 0 && !force)
-            {
-                return new OperationDetails(false, "There are topics with the same name", "name");
-            }
-            forum.Topics.Add(new DataContract.Models.Topic { Name = name, Author = user, CreatedDate = DateTime.Now.Date, Forum = forum, Text = text });
-            await Database.SaveAsync();
-            return new OperationDetails(true, "Topic was added", "");
-        }
-
         public async Task<OperationDetails> Create(string name, string authorEmail)
         {
             var user = await Database.UserManager.FindByEmailAsync(authorEmail);

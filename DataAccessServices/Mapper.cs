@@ -3,7 +3,9 @@ using DataContract.Identity.Models;
 using DataContract.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,70 +13,66 @@ namespace DataAccessServices
 {
     internal static class Mapper
     {
-        //TODO: Implement reflection here
-        private static void MapObjects(object source, object destination, bool selectPrimitives = true)
+        /// <summary>
+        /// Maps one object to another if fields name are the same and they are not Generic
+        /// </summary>
+        /// <param name="source">Source obeject</param>
+        /// <param name="target">Object to map from source</param>
+        /// <returns></returns>
+        public static object MapObjects(object source, object target, bool includeGenerics = false)
         {
-            Type sourceType = source.GetType();
-            Type destinationType = destination.GetType();
-
-            var sourceProperties = sourceType.GetProperties();
-            var destionationProperties = destinationType.GetProperties();
-
-            var commonProperties = from sp in sourceProperties
-                                   join dp in destionationProperties on new { sp.Name, sp.PropertyType } equals
-                                       new { dp.Name, dp.PropertyType }
-                                   select new { sp, dp };
-
-            foreach (var match in commonProperties)
+            foreach (PropertyInfo sourceProp in source.GetType().GetProperties())
             {
-                if (selectPrimitives)
-                    if (match.sp.GetType().IsPrimitive)
-                    {
-                        match.dp.SetValue(destination, match.sp.GetValue(source, null), null);
-                    }
-                    else { }
-                else
+                //TODO Fix that
+                PropertyInfo targetProp = target.GetType().GetProperties().Where(p => p.Name == sourceProp.Name).FirstOrDefault();
+                
+                //Debugger.Launch();
+                if (targetProp != null && targetProp.GetType().Name == sourceProp.GetType().Name)
                 {
-                    match.dp.SetValue(destination, match.sp.GetValue(source, null), null);
+                    if (!includeGenerics)
+                    {
+                        if (!sourceProp.GetType().IsGenericType)
+                        {
+                            targetProp.SetValue(target, sourceProp.GetValue(source));
+                        }
+                    }
+                    else
+                    {
+                        targetProp.SetValue(target, sourceProp.GetValue(source));
+                    }
                 }
             }
+            return target;
         }
 
         public static User Map(AppUser user)
         {
             if (user == null) return null;
 
-            return new User
-            {
-                Id = user.Id,
-                Email = user.Email,
-                IsBlocked = user.IsBlocked,
-                RegistrationDate = user.Profile.RegistrationDate,
-                UserName = user.Profile.UserName,
-                Status = user.Profile.Status,
-                EmailNotificationsEnabled = user.Profile.EmailNotificationsEnabled,
-                ForumNotificationsEnabled = user.Profile.ForumNotificationsEnabled,
-                SubscriptionEnabled = user.Profile.SubscriptionEnabled,
-                EmailConfirmed = user.EmailConfirmed
-            };
+            var result = new User();
+            MapObjects(user, result);
+
+            result.RegistrationDate = user.Profile.RegistrationDate;
+            result.UserName = user.Profile.UserName;
+            result.Status = user.Profile.Status;
+            result.EmailNotificationsEnabled = user.Profile.EmailNotificationsEnabled;
+            result.ForumNotificationsEnabled = user.Profile.ForumNotificationsEnabled;
+            result.SubscriptionEnabled = user.Profile.SubscriptionEnabled;
+            result.Rating = user.Profile.Rating;
+
+            return result;
         }
 
         public static CommentModel Map(Comment comment, bool includeReplies = true)
         {
             if (comment == null) return null;
-            var result = new CommentModel
-            {
-                Id = comment.Id,
-                AuthorId = comment.AuthorId,
-                CreatedDate = comment.CreatedDate,
-                CreatedDateString = comment.CreatedDate.ToShortDateString(),
-                Order = comment.Order,
-                ReplyToCommentId = comment.ReplyToCommentId,
-                Text = comment.Text,
-                TopicId = comment.TopicId,
-                Replies = new List<CommentModel>()
-            };
 
+            var result = new CommentModel();
+            MapObjects(comment, result);
+
+            result.Replies = new List<CommentModel>();
+            result.CreatedDateString = comment.CreatedDate.ToShortDateString();
+            result.AuthorName = comment.Author.Profile.UserName;
             if (includeReplies)
             {
                 foreach (var reply in comment.Replies)
@@ -86,24 +84,22 @@ namespace DataAccessServices
 
         }
 
-        public static TopicModel Map(Topic topic)
+        public static TopicModel Map(Topic topic, bool includeComments)
         {
             if (topic == null) return null;
-            var result = new TopicModel
-            {
-                Id = topic.Id,
-                AuthorId = topic.AuthorId,
-                Comments = new List<CommentModel>(),
-                CreatedDate = topic.CreatedDate,
-                CreatedDateString = topic.CreatedDate.ToShortDateString(),
-                ForumId = topic.ForumId,
-                Name = topic.Name,
-                Text = topic.Text
-            };
 
-            foreach (var comment in topic.Comments)
+            var result = new TopicModel();
+            MapObjects(topic, result);
+
+            result.Comments = new List<CommentModel>();
+            result.CreatedDateString = topic.CreatedDate.ToShortDateString();
+
+            if (includeComments)
             {
-                result.Comments.Add(Map(comment));
+                foreach (var comment in topic.Comments.Where(c => c.Order == 0))
+                {
+                    result.Comments.Add(Map(comment));
+                }
             }
             return result;
         }
@@ -111,28 +107,16 @@ namespace DataAccessServices
         public static ForumModel Map(Forum forum)
         {
             if (forum == null) return null;
-            var result = new ForumModel
-            {
-                Id = forum.Id,
-                AuthorId = forum.AuthorId,
-                CreatedDate = forum.CreatedDate,
-                CreatedDateString = forum.CreatedDate.ToShortDateString(),
-                Name = forum.Name,
-                Topics = new List<TopicModel>()
-            };
+            var result = new ForumModel();
+            MapObjects(forum, result);
+
+            result.CreatedDateString = result.CreatedDate.ToShortDateString();
+            result.AuthorName = forum.Author.Profile.UserName;
+            result.Topics = new List<TopicModel>();
 
             foreach (var topic in forum.Topics)
             {
-                result.Topics.Add(new TopicModel
-                {
-                    Id = topic.Id,
-                    Name = topic.Name,
-                    Text = topic.Text,
-                    ForumId = topic.ForumId,
-                    AuthorId = topic.AuthorId,
-                    CreatedDate = topic.CreatedDate,
-                    CreatedDateString = topic.CreatedDate.ToShortDateString()
-                });
+                result.Topics.Add(Map(topic, false));
             }
             return result;
 
@@ -140,15 +124,12 @@ namespace DataAccessServices
 
         public static ArticleModel Map(Article article)
         {
-            return new ArticleModel
-            {
-                Id = article.Id,
-                AuthorId = article.AuthorId,
-                CreatedDate = article.CreatedDate,
-                CreatedDateString = article.CreatedDate.ToShortDateString(),
-                Name = article.Name,
-                Text = article.Text
-            };
+            var result = new ArticleModel();
+            //Debugger.Launch();
+            MapObjects(article, result);
+            result.AuthorName = article.Author.Profile.UserName;
+            result.CreatedDateString = result.CreatedDate.ToShortDateString();
+            return result;
         }
 
     }

@@ -14,7 +14,6 @@ namespace DataAccessServices.Interfaces
         OperationDetails Update(ForumModel item);
         OperationDetails Delete(int id);
         ForumModel GetForum(int id);
-        Task<OperationDetails> AddTopic(int forumId, string name, string text, string authorEmail, bool force = false);
 
         ICollection<ForumModel> GetForums();
     }

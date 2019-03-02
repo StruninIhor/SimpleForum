@@ -1,0 +1,47 @@
+﻿@model DataAccessServices.Models.TopicModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<hr />
+
+@Html.Partial("_GetComments", Model);
+
+<div id="commentForm" style="display: none;">
+
+</div>
+
+@if (Request.IsAuthenticated)
+{
+    <button onclick="getCommentForm();" class="btn btn-primary">Comment</button>
+
+
+@section Scripts{
+    <script>
+        function getCommentForm() {
+            $.get('@Url.Action("GetCommentForm", new { topicId = Model.Id })', function (responce) {
+                //alert(responce);
+                var $commentForm = $("#commentForm").attr("style", "");
+                $commentForm.html(responce);
+            });
+        }
+
+        function sendComment() {
+            let comment = $("#commentForm");
+            if (comment != null) {
+                var data = {
+                    Text: $("textarea#Text.form-control.comment").val(),
+                    topicId: @Model.Id,
+                    
+
+                }
+
+                $.post('@Url.Action("Comment", "Topic")', { model: data }, function (responce) { alert(responce);})
+            }
+        }
+
+    </script>
+}}

@@ -10,7 +10,7 @@ namespace DataAccessServices.Interfaces
 {
     public interface IArticleService: IDisposable
     {
-        Task<OperationDetails> Create(string name, string text, string authorEmail, bool force = false);
+        Task<OperationDetails> Create(string name, string text, string authorEmail);
         OperationDetails Update(ArticleModel item);
         OperationDetails Delete(int id);
 

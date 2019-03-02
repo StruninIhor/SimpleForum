@@ -12,10 +12,12 @@ namespace Web.Controllers
     public class ArticleController : Controller
     { 
         IArticleService articleService;
+        IUserService userService;
 
-        public ArticleController(IArticleService articleService)
+        public ArticleController(IArticleService articleService, IUserService userService)
         {
             this.articleService = articleService;
+            this.userService = userService;
         }
 
         // GET: Article
@@ -43,7 +45,7 @@ namespace Web.Controllers
         [Authorize]
         public ActionResult Create()
         {
-            return View(new CreateArticleViewModel { Force = false });
+            return View();
         }
 
         [HttpPost]
@@ -57,59 +59,46 @@ namespace Web.Controllers
 
                 if (result.Succedeed)
                 {
-                    return View("Index");
+                    return RedirectToAction("Index");
                 }
-                else if (result.Property == "name")
+                else
                 {
-                    if (model.Force)
-                    {
-                        var forcedResult = await articleService.Create(model.Name, model.Text, User.Identity.Name, true);
-                        if (result.Succedeed)
-                        {
-                            return View("Index");
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", forcedResult.Message);
-                        }
-                    }
-                    else
-                    {
-                        ViewBag.ForceMessage = true;
-                        ModelState.AddModelError("Name", result.Message);
-                    }
+                    ModelState.AddModelError("Name", result.Message);
                 }
             }
             return View(model);
         }
 
         [HttpGet]
-        [Authorize(Roles = "superadmin, admin, moderator")]
-        public ActionResult Edit(int? id)
+        [Authorize]
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return HttpNotFound();
             }
-            else
-            {
-                var article = articleService.GetArticle((int)id);
+            var article = articleService.GetArticle((int)id);
 
-                if (article == null)
+            if (article == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (User.IsInRole("user"))
+            {
+                if (article.AuthorId != (await userService.GetUser(User.Identity.Name)).Id)
                 {
-                    return HttpNotFound();
-                }
-                else
-                {
-                    EditArticleViewModel model = new EditArticleViewModel
-                    {
-                        Id = article.Id,
-                        Name = article.Name,
-                        Text = article.Text
-                    };
-                    return View(model);
+                    return RedirectToAction("Login");
                 }
             }
+
+            EditArticleViewModel model = new EditArticleViewModel
+            {
+                Id = article.Id,
+                Name = article.Name,
+                Text = article.Text
+            };
+            return View(model);
         }
 
         [HttpPost]

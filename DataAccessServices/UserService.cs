@@ -60,7 +60,8 @@ namespace DataAccessServices
                     Status = userDto.Status,
                     EmailNotificationsEnabled = userDto.EmailNotificationsEnabled,
                     ForumNotificationsEnabled = userDto.ForumNotificationsEnabled,
-                    SubscriptionEnabled = userDto.SubscriptionEnabled
+                    SubscriptionEnabled = userDto.SubscriptionEnabled,
+                    Rating = 0
                 });
 
 
@@ -150,6 +151,7 @@ namespace DataAccessServices
                 user.Profile.UserName = model.UserName;
                 user.Profile.Status = model.Status;
                 user.IsBlocked = model.IsBlocked;
+                user.Profile.Rating = model.Rating;
                 
                 var result = await Database.UserManager.UpdateAsync(user);
 

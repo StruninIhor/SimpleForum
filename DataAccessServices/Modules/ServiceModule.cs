@@ -42,6 +42,7 @@ namespace DataAccessServices.Modules
             Bind<IForumService>().To<ForumService>();
             Bind<ITopicService>().To<TopicService>();
             Bind<IArticleService>().To<ArticleService>();
+            Bind<ICommentService>().To<CommentService>();
         }
     }
 }

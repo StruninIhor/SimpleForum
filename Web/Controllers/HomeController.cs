@@ -12,10 +12,14 @@ namespace Web.Controllers
     {
         IForumService forumService;
         IArticleService articleService;
-        public HomeController(IForumService fs, IArticleService articleService)
+        ICommentService commentService;
+        ITopicService topicService;
+        public HomeController(IForumService fs, IArticleService articleService, ICommentService commentService, ITopicService topicService)
         {
             forumService = fs;
             this.articleService = articleService;
+            this.commentService = commentService;
+            this.topicService = topicService;
         }
 
         public ActionResult Index()
@@ -77,6 +81,43 @@ namespace Web.Controllers
         {
             return Json(GetMenu());
         }
+
+        [HttpPost]
+        public ActionResult TestAuthor()
+        {
+            var article = articleService.GetArticles().FirstOrDefault();
+            if (article == null)
+            {
+                return View("Error");
+            }
+            else return PartialView(article);
+        }
+
+        [HttpGet]
+        public JsonResult TestArticle(string type = "article")
+        {
+
+            if (type == "article")
+            {
+                return CustomJson(articleService.GetArticles().FirstOrDefault());
+            }
+            else if (type == "forum")
+            {
+                return CustomJson(forumService.GetForums().FirstOrDefault());
+            }
+            else if (type == "comment")
+            {
+                return CustomJson(commentService.GetTopicComments(topicService.GetTopics().FirstOrDefault().Id));
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return CustomJson(new { message = "Undefined type" });
+            }
+        }
+
+        private JsonResult CustomJson(object data) => Json(data, JsonRequestBehavior.AllowGet);
+        
 
     }
 }

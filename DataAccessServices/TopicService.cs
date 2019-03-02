@@ -19,61 +19,7 @@ namespace DataAccessServices
             Database = unit;
         }
 
-        public async Task<OperationDetails> Comment(int topicId, string authorEmail, string text, int? replyToCommentId)
-        {
-            var user = await Database.UserManager.FindByEmailAsync(authorEmail);
-
-            if (user == null)
-            {
-                return new OperationDetails(false, "Author was not found", "");
-            }
-
-            var topic = Database.Topics.GetById(topicId);
-
-            if (topic == null)
-            {
-                return new OperationDetails(false, "Topic was not found", "");
-            }
-            var replyTo = new DataContract.Models.Comment();
-            if (replyToCommentId != null)
-            {
-                replyTo = Database.Comments.GetById((int)replyToCommentId);
-                if (replyTo == null)
-                {
-                    return new OperationDetails(false, "Reply to comment was not found", "");
-                }
-                if (replyTo.TopicId != topicId)
-                {
-                    return new OperationDetails(false, "Reply to comment topic and reply topic must be the same", "");
-                }
-                replyTo.Replies.Add(new DataContract.Models.Comment
-                {
-                    Author = user,
-                    Topic = topic,
-                    CreatedDate = DateTime.Now,
-                    Order = replyTo.Order + 1,
-                    Text = text
-                });
-                return new OperationDetails(true, "Reply was added", "");
-            }
-            else
-            {
-                topic.Comments.Add(new DataContract.Models.Comment
-                {
-                    Order = 0,
-                    CreatedDate = DateTime.Now,
-                    Author = user,
-                    ReplyTo = null,
-                    Text = text,
-                    Topic = topic
-                });
-                return new OperationDetails(true, "Comment was added", "");
-            }
-
-            
-        }
-
-        public async Task<OperationDetails> Create(int forumId, string name, string authorEmail)
+        public async Task<OperationDetails> Create(int forumId, string name, string text, string authorEmail)
         {
             var user = await Database.UserManager.FindByEmailAsync(authorEmail);
 
@@ -92,7 +38,10 @@ namespace DataAccessServices
             {
                 Name = name,
                 Forum = forum,
-                Author = user
+                Author = user,
+                CreatedDate = DateTime.Now,
+                Text = text
+                
             });
             await Database.SaveAsync();
             return new OperationDetails(true, "Topic was created successfully", "");
@@ -117,19 +66,24 @@ namespace DataAccessServices
             Database.Dispose();
         }
 
-        public TopicModel GetById(int id)
+        public TopicModel GetById(int id, bool includeComments = true)
         {
-            return Mapper.Map(Database.Topics.GetById(id));
+            return Mapper.Map(Database.Topics.GetById(id), includeComments);
         }
 
-        public ICollection<TopicModel> GetTopics()
+        public ICollection<TopicModel> GetTopics(bool includeComments = true)
         {
             ICollection<TopicModel> result = new List<TopicModel>();
             foreach(var topic in Database.Topics.GetAll())
             {
-                result.Add(Mapper.Map(topic));
+                result.Add(Mapper.Map(topic, includeComments));
             }
             return result;
+        }
+
+        public int TopicsCount()
+        {
+            return Database.Topics.Select(t => t.Id).Count();
         }
 
         public OperationDetails Update(TopicModel item)

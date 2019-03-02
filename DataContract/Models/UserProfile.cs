@@ -11,6 +11,9 @@ namespace DataContract.Models
     {
         
         public int Id { get; set; }
+
+        public int Rating { get; set; }
+
         public virtual AppUser AppUser { get; set; }
 
         public DateTime RegistrationDate { get; set; }

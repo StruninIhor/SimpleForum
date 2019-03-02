@@ -19,14 +19,14 @@
     @Html.ValidationSummary("", new { @class="text-danger alert-danger" })
     <div class="form-group">
         @Html.LabelFor(m => m.Email)
-        <div>
-            @Html.TextBoxFor(m => m.Email)
+        <div >
+            @Html.TextBoxFor(m => m.Email, new {@class= "form-control-static"})
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Password)
         <div>
-            @Html.PasswordFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control-static" })
         </div>
     </div>
     <div class="checkbox">

@@ -33,12 +33,17 @@ namespace DataContract
 
         public IEnumerable<Comment> GetAll()
         {
-            return db.Comments.Select(a => a);
+            return db.Comments/*.Select(a => a)*/;
         }
 
         public Comment GetById(int id)
         {
             return db.Comments.Find(id);
+        }
+
+        public IEnumerable<TResult> Select<TResult>(Func<Comment, TResult> expression)
+        {
+            return db.Comments.Select(expression);
         }
 
         public void Update(Comment item)

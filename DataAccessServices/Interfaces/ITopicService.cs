@@ -10,14 +10,14 @@ namespace DataAccessServices.Interfaces
 {
     public interface ITopicService : IDisposable
     {
-        Task<OperationDetails> Create(int forumId, string name, string authorEmail);
+        Task<OperationDetails> Create(int forumId, string name, string text, string authorEmail);
         OperationDetails Update(TopicModel item);
         OperationDetails Delete(int id);
 
-        TopicModel GetById(int id);
+        TopicModel GetById(int id, bool includeComments = true);
 
-        Task<OperationDetails> Comment(int topicId, string authorEmail, string text, int? replyToCommentId);
+        ICollection<TopicModel> GetTopics(bool includeComments = true);
 
-        ICollection<TopicModel> GetTopics();
+        int TopicsCount();
     }
 }

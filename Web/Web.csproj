@@ -173,6 +173,7 @@
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -182,16 +183,21 @@
     <Compile Include="Models\Account\EditProfileViewModel.cs" />
     <Compile Include="Models\Account\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\Account\LoginViewModel.cs" />
+    <Compile Include="Models\Account\ProfileViewModel.cs" />
     <Compile Include="Models\Account\RegisterViewModel.cs" />
     <Compile Include="Models\Account\ResetPasswordViewModel.cs" />
     <Compile Include="Models\Article\CreateArticleViewModel.cs" />
     <Compile Include="Models\Article\DeleteArticleViewModel.cs" />
     <Compile Include="Models\Article\EditArticleViewModel.cs" />
-    <Compile Include="Models\Forum\AddTopicViewModel.cs" />
+    <Compile Include="Models\DataAnnotations\RemoveScriptAttribute.cs" />
+    <Compile Include="Models\Topic\AddTopicViewModel.cs" />
     <Compile Include="Models\Forum\CreateViewModel.cs" />
     <Compile Include="Models\Forum\DeleteForumViewModel.cs" />
     <Compile Include="Models\Forum\EditForumViewModel.cs" />
     <Compile Include="Models\MenuItem.cs" />
+    <Compile Include="Models\Topic\CommentViewModel.cs" />
+    <Compile Include="Models\Topic\EditTopicViewModel.cs" />
+    <Compile Include="Models\Topic\ReplyViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\ForumModule.cs" />
     <Compile Include="Util\KernelHolder.cs" />
@@ -388,7 +394,7 @@
     <Content Include="Views\Forum\Index.cshtml" />
     <Content Include="Views\Forum\Create.cshtml" />
     <Content Include="Views\Forum\GetForum.cshtml" />
-    <Content Include="Views\Forum\AddTopic.cshtml" />
+    <Content Include="Views\Topic\Create.cshtml" />
     <Content Include="Views\Home\NavigationMenuTest.cshtml" />
     <Content Include="Views\Forum\EditForum.cshtml" />
     <Content Include="Views\Forum\DeleteForum.cshtml" />
@@ -397,9 +403,15 @@
     <Content Include="Views\Article\Create.cshtml" />
     <Content Include="Views\Article\Edit.cshtml" />
     <Content Include="Views\Article\Delete.cshtml" />
+    <Content Include="Views\Shared\_Error.cshtml" />
+    <Content Include="Views\Topic\_GetCommentForm.cshtml" />
+    <Content Include="Views\Topic\Topic.cshtml" />
+    <Content Include="Views\Topic\_GetComments.cshtml" />
+    <Content Include="Views\Home\TestAuthor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\custom\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

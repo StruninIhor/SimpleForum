@@ -14,6 +14,8 @@ namespace DataAccessServices.Models
         public string Password { get; set; }
         public bool IsBlocked { get; set; }
 
+        public int Rating { get; set; }
+
         public DateTime RegistrationDate { get; set; }
         public string UserName { get; set; }
 

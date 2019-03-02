@@ -1,0 +1,25 @@
+﻿@using DataAccessServices.Models
+@model TopicModel
+
+@helper BuildComment(CommentModel comment)
+{
+    <li class="list-group-item">
+        @*@Web.Helpers.AuthorHelper.GetCommentAuthor(comment, Url.Action("GetUserProfile", "Account"))
+        <br />*@
+        @comment.Text
+    </li>
+
+    @*foreach (var reply in comment.Replies.Where(c => c.ReplyToCommentId == comment.Id && c.Order == comment.Order+1))
+    {
+        BuildComment(reply);
+    }*@}
+
+<ul class="list-group">
+    @foreach (var c in Model.Comments)
+    {
+        BuildComment(c);
+        @*<li class="list-group-item">
+            @c.Text
+        </li>*@
+    }
+</ul>

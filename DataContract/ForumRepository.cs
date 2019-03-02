@@ -33,13 +33,18 @@ namespace DataContract
 
         public IEnumerable<Forum> GetAll()
         {
-            return db.Forums.Select(f => f);
+            return db.Forums/*.Select(f => f)*/;
         }
 
         public Forum GetById(int id)
         {
             var result = db.Forums.Find(id);
             return result;
+        }
+
+        public IEnumerable<TResult> Select<TResult>(Func<Forum, TResult> expression)
+        {
+            return db.Forums.Select(expression);
         }
 
         public void Update(Forum item)

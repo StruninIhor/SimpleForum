@@ -4,21 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Web.Models.Forum
+namespace Web.Models.Topic
 {
-    public class AddTopicViewModel
+    public class ReplyViewModel
     {
         [Required]
-        public int ForumId { get; set; }
+        public int ReplyToCommentId { get; set; }
 
         [Required]
         public string Text { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public bool Force { get; set; }
-
     }
 }

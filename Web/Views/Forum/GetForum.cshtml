@@ -10,7 +10,7 @@
     @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
     {
     <div class="row">
-        @Html.ActionLink("Add new topic", "AddTopic", new { forumId = Model.Id }, new { @class = "btn btn-default col-md-2" })
+        @Html.ActionLink("Add new topic", "Create", "Topic", new { forumId = Model.Id }, new { @class = "btn btn-default col-md-2" })
         @Html.ActionLink("Edit forum", "EditForum", new { id = Model.Id }, new { @class = "btn btn-primary col-md-2" })
     </div>
     }
@@ -33,7 +33,7 @@
             {
                 <tr>
                     <td>
-                        @Html.ActionLink(topic.Name??"null", "Index", "Topic", new { id = topic.Id }, null)
+                        @Html.ActionLink(topic.Name??"null", "Topic", "Topic", new { id = topic.Id }, null)
                     </td>
                     <td>
                         @topic.CreatedDateString
@@ -41,7 +41,7 @@
                     @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
                     {
                         <td>
-                            @Html.ActionLink("Delete", "Delete", "Topic", new { id = topic.Id}, new { @class="btn btn-danger"})
+                            @Html.ActionLink("Delete", "Delete", "Topic", new { id = topic.Id}, new { @class="btn btn-danger btn-block"})
                         </td>
                     }
                 </tr>

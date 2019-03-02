@@ -15,5 +15,6 @@ namespace DataContract.Interfaces
         T GetById(int id);
         IEnumerable<T> GetAll();
         IEnumerable<T> Where(Func<T, bool> predicate);
+        IEnumerable<TResult> Select<TResult>(Func<T, TResult> expression);
     }
 }

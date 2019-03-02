@@ -151,6 +151,24 @@ namespace Web.Controllers
 
 
         [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> GetUserProfile(int? id)
+        {
+            if (id == null) return HttpNotFound();
+            else
+            {
+                var user = await UserService.GetUser((int)id);
+
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+                //TODO 
+                throw new NotImplementedException();
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
             try

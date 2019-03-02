@@ -1,19 +1,12 @@
-﻿@model Web.Models.Forum.AddTopicViewModel
+﻿@model Web.Models.Topic.AddTopicViewModel
 
 @{
-    ViewBag.Title = "AddTopic";
+    ViewBag.Title = "Add Topic";
 }
 
 <h2>Add new Topic</h2>
 
-@if (ViewBag.ForceMessage)
-{
-    <p class="danger alert-danger text-danger">
-        There is another topic with current name!
-    </p>
-}
-
-@using (Html.BeginForm("AddTopic", "Forum", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("Create", "Topic", FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.ValidationSummary();
     @Html.AntiForgeryToken();
@@ -31,17 +24,6 @@
             @Html.TextBoxFor(m => m.Text, new { @class = "form-control"})
         </div>
     </div>
-
-    if (ViewBag.ForceMessage)
-    {
-        <div class="checkbox">
-            <label>@Html.CheckBoxFor(m => m.Force) Check this, if you want to create this topic</label>
-        </div>
-    }
-    else
-    {
-        @Html.HiddenFor(m => m.Force)
-    }
 
     <input type="submit" class="btn btn-primary" value="Add topic" />
     }

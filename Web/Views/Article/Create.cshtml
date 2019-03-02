@@ -21,22 +21,11 @@
     </div>
 
     <div class="form-group-lg">
-        @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.Text, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextAreaFor(m => m.Text, new { @class = "col-md-2 control-label", rows = 10, cols = 20, placeholder = "Input text of your article here..." })
+            @Html.TextAreaFor(m => m.Text, new { @class = "form-control", rows = 12, placeholder = "Input text of your article here..." })
         </div>
     </div>
-
-    if (ViewBag.ForceMessage)
-    {
-        <div class="checkbox">
-            <label>@Html.CheckBoxFor(m=>m.Force) Create it </label>
-        </div>
-    }
-    else
-    {
-        @Html.HiddenFor(m => m.Force)
-    }
 
     <div class="form-group-sm">
         <input type="submit" class="btn btn-primary" value="Create" />

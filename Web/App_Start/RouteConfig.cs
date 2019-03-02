@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Web
@@ -12,7 +8,13 @@ namespace Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            
+
+            //After using that, I got @Url.Action("GetUserProfile", "Account") was returned ~/User/{id from model on the page}/{id of corresponding user}
+            //routes.MapRoute(
+            //    name: "User",
+            //    url: "User/{id}",
+            //    defaults: new { controller = "Account", action = "GetUserProfile", id = UrlParameter.Optional });
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

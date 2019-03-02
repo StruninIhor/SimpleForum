@@ -1,0 +1,13 @@
+﻿@model DataAccessServices.Models.CommentModel
+
+<form name="commentForm" class="form-horizontal" action="@Url.Action("Comment", "Topic")"
+      method="post">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextAreaFor(m => m.Text, new { @class="form-control comment", rows = 10, placeholder="Leave your comment here" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="Leave comment" onclick="sendComment();"/>
+                </div>
+            </div>
+</form>

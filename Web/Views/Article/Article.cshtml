@@ -4,14 +4,20 @@
     ViewBag.Title = Model.Name;
 }
 
-<h2>@Model.Name</h2>
+<hr />
 
-<div class="well">
-    @Web.Helpers.AuthorHelper.GetAuthor(Model, Url.Action("GetUserProfile", "Account"))
-</div>
 
 <div class="jumbotron">
-    @Model.Text
+
+    <div class="h2">
+        @Html.ValueFor(m => m.Name)
+    </div>
+    <div class="lead">
+        @(new HtmlString(Model.Text))
+    </div>
+    <cite>@Web.Helpers.AuthorHelper.GetAuthor(Model, Url.Action("GetUserProfile", "Account", null))</cite>
+    <cite><a href="@Url.Action("GetUserProfile", "Account")">Test</a></cite>
+
 </div>
 
 <hr />

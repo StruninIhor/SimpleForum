@@ -58,9 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArticleService.cs" />
+    <Compile Include="CommentService.cs" />
     <Compile Include="ForumService.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />
     <Compile Include="Interfaces\IArticleService.cs" />
+    <Compile Include="Interfaces\ICommentService.cs" />
     <Compile Include="Interfaces\IForumService.cs" />
     <Compile Include="Interfaces\ITopicService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />

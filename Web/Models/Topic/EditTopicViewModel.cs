@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Web.Models.DataAnnotations;
+using System.Text;
 
-namespace Web.Models.Article
+namespace Web.Models.Topic
 {
-    public class EditArticleViewModel
+    class EditTopicViewModel
     {
         [Required]
         public int Id { get; set; }
@@ -17,8 +16,6 @@ namespace Web.Models.Article
         public string Name { get; set; }
 
         [Required]
-        [StringLength(1500, MinimumLength = 28)]
-        [AllowHtml, RemoveScript]
         public string Text { get; set; }
     }
 }

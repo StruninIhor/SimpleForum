@@ -33,12 +33,17 @@ namespace DataContract
 
         public IEnumerable<Topic> GetAll()
         {
-            return db.Topics.Select(a => a);
+            return db.Topics/*.Select(a => a)*/;
         }
 
         public Topic GetById(int id)
         {
             return db.Topics.Find(id);
+        }
+
+        public IEnumerable<TResult> Select<TResult>(Func<Topic, TResult> expression)
+        {
+            return db.Topics.Select<Topic, TResult>(expression);
         }
 
         public void Update(Topic item)
