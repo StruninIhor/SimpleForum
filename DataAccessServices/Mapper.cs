@@ -19,27 +19,19 @@ namespace DataAccessServices
         /// <param name="source">Source obeject</param>
         /// <param name="target">Object to map from source</param>
         /// <returns></returns>
-        public static object MapObjects(object source, object target, bool includeGenerics = false)
+        public static object MapObjects(object source, object target, params string[] NotIncludedProperties)
         {
             foreach (PropertyInfo sourceProp in source.GetType().GetProperties())
             {
-                //TODO Fix that
                 PropertyInfo targetProp = target.GetType().GetProperties().Where(p => p.Name == sourceProp.Name).FirstOrDefault();
-                
-                //Debugger.Launch();
-                if (targetProp != null && targetProp.GetType().Name == sourceProp.GetType().Name)
+
+                string ReflectionPropertyName = sourceProp.Name;
+
+                if (targetProp != null && 
+                    targetProp.GetType().Name == sourceProp.GetType().Name && 
+                    !NotIncludedProperties.Contains(ReflectionPropertyName))
                 {
-                    if (!includeGenerics)
-                    {
-                        if (!sourceProp.GetType().IsGenericType)
-                        {
-                            targetProp.SetValue(target, sourceProp.GetValue(source));
-                        }
-                    }
-                    else
-                    {
-                        targetProp.SetValue(target, sourceProp.GetValue(source));
-                    }
+                    targetProp.SetValue(target, sourceProp.GetValue(source));
                 }
             }
             return target;
@@ -68,7 +60,7 @@ namespace DataAccessServices
             if (comment == null) return null;
 
             var result = new CommentModel();
-            MapObjects(comment, result);
+            MapObjects(comment, result, NotIncludedProperties: new string[] { "Replies" });
 
             result.Replies = new List<CommentModel>();
             result.CreatedDateString = comment.CreatedDate.ToShortDateString();
@@ -89,7 +81,7 @@ namespace DataAccessServices
             if (topic == null) return null;
 
             var result = new TopicModel();
-            MapObjects(topic, result);
+            MapObjects(topic, result, NotIncludedProperties: new string[] { "Comments" });
 
             result.Comments = new List<CommentModel>();
             result.CreatedDateString = topic.CreatedDate.ToShortDateString();
@@ -108,7 +100,7 @@ namespace DataAccessServices
         {
             if (forum == null) return null;
             var result = new ForumModel();
-            MapObjects(forum, result);
+            MapObjects(forum, result, NotIncludedProperties: new string[] { "Topics" });
 
             result.CreatedDateString = result.CreatedDate.ToShortDateString();
             result.AuthorName = forum.Author.Profile.UserName;

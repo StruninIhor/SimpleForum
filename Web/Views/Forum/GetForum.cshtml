@@ -5,7 +5,7 @@
 }
 
 <h2 class="text-center">@Model.Name</h2>
-<h5 class="col-md-3">@Web.Helpers.AuthorHelper.GetAuthor(Model, Url.Action("GetUserProfile", "Account"))</h5>
+<h5 class="col-md-3"><cite>Created by @Html.ActionLink(Model.AuthorName, $"GetUserProfile/{Model.AuthorId}", "Account") @Model.CreatedDateString</cite></h5>
 <div>
     @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
     {
@@ -33,7 +33,7 @@
             {
                 <tr>
                     <td>
-                        @Html.ActionLink(topic.Name??"null", "Topic", "Topic", new { id = topic.Id }, null)
+                        @Html.ActionLink(topic.Name, "Topic", "Topic", new { id = topic.Id }, null)
                     </td>
                     <td>
                         @topic.CreatedDateString

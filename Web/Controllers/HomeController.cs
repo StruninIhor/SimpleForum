@@ -14,6 +14,7 @@ namespace Web.Controllers
         IArticleService articleService;
         ICommentService commentService;
         ITopicService topicService;
+
         public HomeController(IForumService fs, IArticleService articleService, ICommentService commentService, ITopicService topicService)
         {
             forumService = fs;
@@ -66,7 +67,7 @@ namespace Web.Controllers
 
                 foreach (var topic in forumService.GetForum(forum.Id).Topics)
                 {
-                    item.Children.Add(new MenuItem { Order = item.Order + 1, Name = topic.Name, Icon = Path("Topic.ico"), Id = Url.Action("GetTopic", "Topic", new { id = topic.Id }), /*Parent = item,*/ ParentId = item.Id });
+                    item.Children.Add(new MenuItem { Order = item.Order + 1, Name = topic.Name, Icon = Path("Topic.ico"), Id = Url.Action("Topic", "Topic", new { id = topic.Id }), /*Parent = item,*/ ParentId = item.Id });
                 }
             }
             foreach (var article in articleService.GetArticles())
@@ -99,24 +100,24 @@ namespace Web.Controllers
 
             if (type == "article")
             {
-                return CustomJson(articleService.GetArticles().FirstOrDefault());
+                return GetJson(articleService.GetArticles().FirstOrDefault());
             }
             else if (type == "forum")
             {
-                return CustomJson(forumService.GetForums().FirstOrDefault());
+                return GetJson(forumService.GetForums().FirstOrDefault());
             }
             else if (type == "comment")
             {
-                return CustomJson(commentService.GetTopicComments(topicService.GetTopics().FirstOrDefault().Id));
+                return GetJson(commentService.GetTopicComments(topicService.GetTopics().FirstOrDefault().Id));
             }
             else
             {
                 Response.StatusCode = 404;
-                return CustomJson(new { message = "Undefined type" });
+                return GetJson(new { message = "Undefined type" });
             }
         }
 
-        private JsonResult CustomJson(object data) => Json(data, JsonRequestBehavior.AllowGet);
+        private JsonResult GetJson(object data) => Json(data, JsonRequestBehavior.AllowGet);
         
 
     }

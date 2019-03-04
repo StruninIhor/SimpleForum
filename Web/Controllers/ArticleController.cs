@@ -168,6 +168,14 @@ namespace Web.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public JsonResult GetArticles()
+        {
+            var articles = articleService.GetArticles();
+
+            return Json(articles, JsonRequestBehavior.AllowGet);
+        }
         
     }
 }

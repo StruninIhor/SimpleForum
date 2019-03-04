@@ -93,18 +93,18 @@ namespace Web.Controllers
             return PartialView("_GetCommentForm");
         }
 
-        [ChildActionOnly]
-        [Authorize]
-        public PartialViewResult GetComments(TopicModel model)
-        {
-            if (model!=null)
-            {
-                var comments = model.Comments;
-                return PartialView("_GetComments", model);
-            }
-            return BadRequest("Topic was not found");
+        //[ChildActionOnly]
+        //[Authorize]
+        //public PartialViewResult GetComments(TopicModel model)
+        //{
+        //    if (model!=null)
+        //    {
+        //        var comments = model.Comments;
+        //        return PartialView("_GetComments", model);
+        //    }
+        //    return BadRequest("Topic was not found");
             
-        }
+        //}
 
         [HttpPost]
         [Authorize]
@@ -147,12 +147,27 @@ namespace Web.Controllers
             return PartialView();
         }
 
+        #region Debug
 
         [HttpGet]
-        public 
-        #region Helpers
+        public JsonResult GetComments(int topicId)
+        {
+            var result = commentService.GetTopicComments(topicId);
 
-        PartialViewResult BadRequest(string status = "An error occured while processing your request")
+            if (result == null)
+            {
+                Response.StatusCode = 404;
+                return GetJson(new { message = "Topic was not found" });
+            }
+
+            return GetJson(result);
+        }
+
+        #endregion
+
+        #region Helpers
+        [HttpGet]
+        public PartialViewResult BadRequest(string status = "An error occured while processing your request")
         {
             //Debugger.Launch();
             //Debugger.Break();
@@ -162,6 +177,8 @@ namespace Web.Controllers
             return PartialView("_Error");
         }
 
+
+        private JsonResult GetJson(object data) => Json(data, JsonRequestBehavior.AllowGet);
         #endregion
 
     }

@@ -15,6 +15,14 @@ namespace Web
             //    url: "User/{id}",
             //    defaults: new { controller = "Account", action = "GetUserProfile", id = UrlParameter.Optional });
 
+            //TODO Check this
+
+            //routes.MapRoute(
+            //    name: "Comment",
+            //    url: "Comment/{topicId}&{recursive}",
+            //    defaults: new { controller = "Comment", action = "Comment", topicId = 1, recursive = false }
+            //    );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

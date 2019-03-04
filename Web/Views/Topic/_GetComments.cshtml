@@ -17,7 +17,7 @@
 <ul class="list-group">
     @foreach (var c in Model.Comments)
     {
-        BuildComment(c);
+        @BuildComment(c)
         @*<li class="list-group-item">
             @c.Text
         </li>*@

@@ -1,4 +1,4 @@
 ﻿@model DataAccessServices.Models.ArticleModel
 
-@Web.Helpers.AuthorHelper.GetAuthor(Model, Url.Action("GetUserProfile", "Account"))
+<cite>Created by @Html.ActionLink(Model.AuthorName, $"GetUserProfile/{Model.AuthorId}", "Account") @Model.CreatedDateString</cite>
 

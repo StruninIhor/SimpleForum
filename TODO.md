@@ -1,17 +1,17 @@
 ## DataContract
 ### Add avatar field to AppUser (postponed)
 
-## DataAccessServices
-1. ~To write mapper using reflection~
-	1. Find a way to avoid generic types
+
 ## Web
 
-###Delete Author Helper -> add AuthorName property to BaseEntityModel
-	Change views according to new model (maybe find and replace)
-###Edit GetForum View and Topic Controller
-###Edit Navigation Menu Test
-###Configre Comment form post and handling
-###Configure Comment AJAX loading in topic
+###Configure Comment Controller
+###Configure getReplies() function in _Layout
+###Set form data (topicId or smth like that)when choosing topic
+###Configure Comment form post and handling
+
+###Configure navigation menu on the left and delete other functions 
+
+
 ### Add Topic Controller
 0. Index
 1. Topic(id) - here will be comments - test comments
@@ -21,7 +21,9 @@
 5. Comment 
 6. Reply
 
+
 ### Add manage(admin) Controller
 
 ### Add user profile view - maybe configure routes from /Account/GetUserProfile/id to /User/id
 
+###Edit Navigation Menu Test

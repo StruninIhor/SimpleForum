@@ -15,9 +15,7 @@
     <div class="lead">
         @(new HtmlString(Model.Text))
     </div>
-    <cite>@Web.Helpers.AuthorHelper.GetAuthor(Model, Url.Action("GetUserProfile", "Account", null))</cite>
-    <cite><a href="@Url.Action("GetUserProfile", "Account")">Test</a></cite>
-
+    <cite>Created by @Html.ActionLink(Model.AuthorName, $"GetUserProfile/{Model.AuthorId}", "Account") @Model.CreatedDateString</cite>
 </div>
 
 <hr />

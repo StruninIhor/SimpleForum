@@ -171,6 +171,7 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
@@ -189,6 +190,10 @@
     <Compile Include="Models\Article\CreateArticleViewModel.cs" />
     <Compile Include="Models\Article\DeleteArticleViewModel.cs" />
     <Compile Include="Models\Article\EditArticleViewModel.cs" />
+    <Compile Include="Models\Comment\CommentViewModel.cs" />
+    <Compile Include="Models\Comment\CreateCommentViewModel.cs" />
+    <Compile Include="Models\Comment\DeleteCommentViewModel.cs" />
+    <Compile Include="Models\Comment\EditCommentViewModel.cs" />
     <Compile Include="Models\DataAnnotations\RemoveScriptAttribute.cs" />
     <Compile Include="Models\Topic\AddTopicViewModel.cs" />
     <Compile Include="Models\Forum\CreateViewModel.cs" />
@@ -412,6 +417,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\custom\" />
+    <Folder Include="Views\Comment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

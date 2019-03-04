@@ -3,6 +3,7 @@ using DataAccessServices.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -19,10 +20,34 @@ namespace Web.Controllers
             forumService = fs;
         }
 
-        [HttpPost]
+        private JsonResult GetJson(object data) => Json(data, JsonRequestBehavior.AllowGet);
+
+        private JsonResult NotFound(string message = "Resource not found")
+        {
+            Response.StatusCode = 404;
+            Response.StatusDescription = message;
+            return GetJson(new { message });
+        }
+
+        [HttpGet]
         public ActionResult GetForums()
         {
-            return Json(new { data = forumService.GetForums() });
+            //Imitation if loading
+            Thread.Sleep(1000);
+            return Json(new { data = forumService.GetForums() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetTopics(int forumId)
+        {
+            var forum = forumService.GetForum(forumId);
+
+            if (forum == null)
+            {
+                return NotFound("Forum not found");
+            }
+
+            return GetJson(forum.Topics);
         }
 
         // GET: Forum
@@ -150,5 +175,6 @@ namespace Web.Controllers
                 return View("Error");
             }
         }
+
     }
 }

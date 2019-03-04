@@ -7,6 +7,33 @@
     @Styles.Render("~/Content/css")
 
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 1500px}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @@media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -31,15 +58,181 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - MVC Forum</p>
-            <p><a href="https://github.com/StruninIhor/SimpleForum/" class="btn-link" title="GitHub page"><img src="~/Content/custom.images/githubLogo.png" style="width: 30px; height: auto;" /></a><br /></p>
-        </footer>
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav">
+                <h4>Navigation</h4>
+                <ul class="nav nav-pills nav-stacked">
+                @* TODO AJAX Navigation *@
+                    <li><button onclick="getForums();" id="forumsItem" class="btn btn-success">
+                        <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">
+                        Forums</button>
+                    <ul id="forums" class="hidden">
+
+                    </ul>
+                    </li>
+                    <li><button onclick="getArticles();" id="articlesItem" class="btn btn-success">
+                            <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">Articles</button>
+                    <ul id="articles" class="hidden"></ul>
+                    </li>
+                    
+                </ul><br>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search..." disabled title="This option is temporary unavailible">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default disabled" type="button" disabled title="This option is temporary unavailible">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-sm-9 body">
+                @RenderBody()
+                <h4>Leave a Comment:</h4>
+                <form role="form">
+                    <div class="form-group">
+                        <textarea class="form-control" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+                <br><br>
+
+                <p><span class="badge">2</span> Comments:</p><br>
+
+            </div>
+        </div>
     </div>
 
+    <footer class="container-fluid">
+        <p>Footer Text</p>
+    </footer>
+        <script type="text/javascript">
+
+        function getForums() {
+            if ($("#forums").hasClass('hidden')) {
+                if ($("#forums").hasClass('loaded'))
+                {
+                    $("#forums").removeClass('hidden');
+                }
+                else
+                {
+                $("#forums").removeClass('hidden');
+                $('#forums').append(document.createElement('li').innerText = "<b>Loading...</b>");
+                $.get('@Url.Action("GetForums", "Forum")', function (responce) {
+                    $("#forums").empty();
+                    $.each(responce.data, function (index, forum) {
+                        $('#forums').append(document.createElement('li').innerText = '<button class="btn btn-default" onclick="getTopics(' + forum.Id + ');"><img src="/Content/custom.images/Forum.ico" style="width: 20px; height: auto;">' + forum.Name + '</button><br \><ul id="topics' + forum.Id + '" class="hidden"></ul>');
+
+                    });
+                    $("#forums").addClass("loaded");
+                });
+                }
+            }
+            else {
+                $("#forums").addClass('hidden');
+            }
+            }
+
+            function getTopics(id) {
+                if (($("#topics" + id).hasClass('hidden')))
+                {
+                    if ($("#topics" + id).hasClass('loaded')) {
+                        $("#topics" + id).removeClass('hidden');
+                    }
+                    else {
+                        $("#topics" + id).removeClass('hidden');
+                        $("#topics" + id).append(document.createElement('li').innerText = "<b>Loading...</b>");
+                        $.get('@Url.Action("GetTopics", "Forum")?forumId=' + id, function (responce) {
+                            $("#topics" + id).empty();
+
+                            if (responce.length == 0) {
+                                $("#topics" + id).append(document.createElement('li').innerText = 'There is no topics here');
+                            }
+
+                            $.each(responce, function (index, topic) {
+                                $("#topics" + id).append(document.createElement('li').innerText = '<button class="btn btn-default" onclick="getComments(' + topic.Id + ');"><img src="/Content/custom.images/Topic.ico" style="width: 20px; height: auto;">' + topic.Name + "</button><br \>");
+                            });
+                            $("#topics" + id).addClass("loaded");
+                        });
+                            }
+                }
+                else {
+                    $("#topics" + id).addClass("hidden");
+                }
+            }
+
+            function getArticles() {
+            if ($("#articles").hasClass('hidden')) {
+                if ($("#articles").hasClass('loaded'))
+                {
+                    $("#articles").removeClass('hidden');
+                }
+                else
+                {
+                $("#articles").removeClass('hidden');
+                $('#articles').append(document.createElement('li').innerText = "<b>Loading...</b>");
+                $.get('@Url.Action("GetArticles", "Article")', function (responce) {
+                    $("#articles").empty();
+                    $.each(responce, function (index, article) {
+                        var name = article.Name;
+                        if (name.length > 37)
+                            {
+                            var names = name.slice(0, 37).split(" ");
+                            name = names.slice(0, names.length - 1).join(" ") + "...";
+                            if (name.length > 37) {
+                                name = names.slice(0, names.length - 2).join(" ") + "..."
+                            }
+                            }
+                        $('#articles').append(document.createElement('li').innerText = '<button class="btn btn-default" onclick="getArticle(' + article.Id + ');"><img src="/Content/custom.images/Article.ico" style="width: 20px; height: auto;">' + name + '</button><br \>');
+                        //alert(article.Name);
+                    });
+                    $("#articles").addClass("loaded");
+                });
+                }
+            }
+            else {
+                $("#articles").addClass('hidden');
+            }
+            }
+
+            function renderComment(parentElementSelector, comment) {
+                $(parentElementSelector).append('<li id="comment' + comment.Id + '><h4 class="text-left" id=commentHeader"' + comment.id + '" >' + comment.AuthorName + '  <small>' + comment.CreatedDateString +
+                    '</small></h4><p>' + comment.Text + '</p><a class="btn btn-link" onclick="getReplies(' + comment.Id + ');">Replies</a><span></span><a class="btn btn-link" onclick="replyTo(' + comment.Id + ');">Reply</a><ul class="hidden" id="replies' + comment.Id + '"></ul></li>');
+            }
+
+            function getComments(id) {
+                $('.body').empty();
+                $comments = document.createElement('ul');
+                $comments.setAttribute('id', 'comments');
+                $('.body').append($comments);
+                
+                $('ul#comments').append(document.createElement('li').innerText = "<b>Loading...</b>");
+                $.get('@Url.Action("GetComments", "Topic")' + '?topicId=' + id, function (comments) {
+                    $('ul#comments').empty();
+                    $.each(comments, function (index, comment) {
+                        //alert(index + comment.Text);
+                        renderComment('ul#comments', comment);
+                    });
+                });
+            }
+
+            function getReplies(id) {
+                $('ul#replies' + id).append('<li><b>Loading...</b></li>');
+                $.get('@Url.Action("GetReplies", "Comment")' + '?commentId=' + id, function (responce) {
+                    $('ul#replies' + id).empty();
+                    if (responce.length == 0) {
+                        $('ul#replies' + id).append('<li> There is no replies here yet </li>');
+                    }
+                })
+            }
+
+            function ReplyTo(id) {
+
+            }
+            
+    </script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/dataTables")
