@@ -1,5 +1,5 @@
 # Simple Forum
-It's a simple ASP.NET web application for forum, which uses EF, AspNet.Identity and OWIN.
+It's a simple ASP.NET web application for forum, which uses EF, AspNet.Identity, OWIN and Ninject.
 It is separated into six main projects (or assemblies):
 1. DataContract - class library, that represents data access layer, this class library contains interfacess, that interact directly with the database using Entity Framework. 
 Hierarchical data is loaded using __lazy loading__ - the simplest way to load data (navigation properties are virtual like [here](https://github.com/StruninIhor/SimpleForum/blob/test/DataContract/Models/Forum.cs#L13))
