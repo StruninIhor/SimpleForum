@@ -197,9 +197,15 @@
             }
             }
 
+            function replyForm(id, buttonId) {
+                return '<form role="form" id="replyForm' + id + '">' + '<div class="form-group"> <textarea class="form-control" id="replyText' + id + '" rows="2" required></textarea></div>' + '<button type="submit" class="btn btn-success" id="' + buttonId + '">Submit</button></form>';
+            }
+
             function renderComment(parentElementSelector, comment) {
                 $(parentElementSelector).append('<li id="comment' + comment.Id + '><h4 class="text-left" id=commentHeader"' + comment.id + '" >' + comment.AuthorName + '  <small>' + comment.CreatedDateString +
-                    '</small></h4><p>' + comment.Text + '</p><a class="btn btn-link" onclick="getReplies(' + comment.Id + ');">Replies</a><span></span><a class="btn btn-link" onclick="replyTo(' + comment.Id + ');">Reply</a><ul class="hidden" id="replies' + comment.Id + '"></ul></li>');
+                    '</small></h4><p>' + comment.Text + '</p><a class="btn btn-link" onclick = "getReplies(' + comment.Id + ')"">Replies</a><span></span><a class="btn btn-link" onclick="getReplyForm(' + comment.Id + ');">Reply</a><ul class="hidden" id="replies' + comment.Id + '"></ul></li>'
+                    + '<li class="hidden" id="reply' + comment.Id + '">' + replyForm(comment.Id, 'replyButton' + comment.Id) + '</li>');
+                $('#replyButton' + comment.Id).click(function (event) { event.preventDefault(); replyTo(comment.Id); });
             }
 
             function processFail(responce) {
@@ -233,6 +239,7 @@
                             //alert(index + comment.Text);
                             renderComment('ul#comments', comment);
                         });
+                        addCommentForm();
                     })
                     .fail(function (responce) {
                         processFail(responce);
@@ -270,15 +277,53 @@
                 }
             }
 
+            function getReplyForm(id) {
+                if ($('li#reply' + id) != undefined) {
+                    if ($('li#reply' + id).hasClass('hidden')) {
+
+                        $('li#reply' + id).removeClass('hidden');
+                    }
+                    else {
+                        $('li#reply' + id).addClass('hidden');
+                    }
+                }
+            }
+
             function replyTo(id) {
-                //TODO
+                if ($('#comment' + id) == undefined) {
+                    throw "There is no such comment with given id";
+                }
+                var text = $('textarea#replyText'+id+'.form-control').val();
+                if (text.length == 0) {
+                    alert('Input comment text, please');
+                    return;
+                }
+                var topicId = $("#topicId").val();
+
+                if (topicId.length == 0) {
+                    alert('Error - topic ID is not set!');
+                    return;
+                }
+
+                else {
+                    $.post('@Url.Action("AddComment", "Comment")', { Text: text, ReplyToCommentId: id, TopicId: topicId }, function (responce) {
+                        console.log('Reply added!');
+                        console.log(responce);
+                        $('ul#replies' + id).addClass('hidden');
+                        $('ul#replies' + id).removeClass('loaded');
+                        $('textarea#replyText' + id + '.form-control').val('');
+                        getReplies(id);
+                    })
+                        .fail(function (responce) { alert(responce); });
+                }
+
             }
 
             function comment() {
                 //$('button#commentButton')
                 var text = $('#commentText').val();
 
-                var topicId = $("#topicId");
+                var topicId = $("#topicId").val();
 
                 if (topicId.length == 0) {
                     alert('Error - topic ID is not set!');
@@ -290,18 +335,18 @@
                     alert('Input comment text, please');
                     return;
                 }
-                $.ajax({
-                    url: '@Url.Action("AddComment", "Comment")',
-                    type: 'post',
-                    data: { Text: text, TopicId: topicId },
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (responce) {
-                        $('u#comments').empty();
-                        $.each(responce, function (index, comment) {
-                            renderComment(comment);
-                        });
-                    }
-                });
+                //console.log('The data will be posted to server:\n Text: ' + text + '\nTopicId: ' + topicId);
+                $.post('@Url.Action("AddComment", "Comment")', { TopicId: topicId, Text: text }, function (responce) {
+                    $('ul#comments').empty();
+                    $.each(responce, function (index, comment) {
+                        renderComment('ul#comments', comment);
+                        //console.log(index,': ', comment);
+                    });
+                    $('ul#comments').addClass('loaded');
+                })
+                    .fail(function (responce) {
+                        processFail(responce);
+                    });
             }
     </script>
     @Scripts.Render("~/bundles/jquery")
