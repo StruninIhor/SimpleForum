@@ -90,7 +90,7 @@
 
             <div class="col-sm-9 body">
                 @RenderBody()
-                <h4>Leave a Comment:</h4>
+                @*<h4>Leave a Comment:</h4>
                 <form role="form">
                     <div class="form-group">
                         <textarea class="form-control" rows="3" required></textarea>
@@ -99,7 +99,7 @@
                 </form>
                 <br><br>
 
-                <p><span class="badge">2</span> Comments:</p><br>
+                <p><span class="badge">2</span> Comments:</p><br>*@
 
             </div>
         </div>
@@ -202,36 +202,107 @@
                     '</small></h4><p>' + comment.Text + '</p><a class="btn btn-link" onclick="getReplies(' + comment.Id + ');">Replies</a><span></span><a class="btn btn-link" onclick="replyTo(' + comment.Id + ');">Reply</a><ul class="hidden" id="replies' + comment.Id + '"></ul></li>');
             }
 
+            function processFail(responce) {
+                console.log(responce);
+                alert(responce.reponceJSON.message);
+            }
+
+            function addCommentForm() {
+                //TODO
+                if ($('ul#comments').length != 0) {
+                    $('.col-sm-9.body').append('<h4>Leave a comment:');
+                    $('.col-sm-9.body').append('<form role="form" id="commentForm"></form>');
+                    $('form#commentForm').append('<div class="form-group"> <textarea class="form-control" id="commentText" rows="3" required></textarea></div>');
+                    $('form#commentForm').append('<button type="submit" class="btn btn-success" id="commentButton">Submit</button>');
+                    $('.col-sm-9.body').append('<br \>');
+                    $('button#commentButton').click(function (event) { event.preventDefault(); comment(); });
+                }
+            }
+
             function getComments(id) {
                 $('.body').empty();
                 $comments = document.createElement('ul');
                 $comments.setAttribute('id', 'comments');
                 $('.body').append($comments);
-                
+                $('.body').append('<input type="hidden" id="topicId" value="' + id  + '" />');
                 $('ul#comments').append(document.createElement('li').innerText = "<b>Loading...</b>");
-                $.get('@Url.Action("GetComments", "Topic")' + '?topicId=' + id, function (comments) {
-                    $('ul#comments').empty();
-                    $.each(comments, function (index, comment) {
-                        //alert(index + comment.Text);
-                        renderComment('ul#comments', comment);
+                $.get('@Url.Action("GetComments", "Topic")' + '?topicId=' + id, function () { })
+                    .done(function (comments) {
+                        $('ul#comments').empty();
+                        $.each(comments, function (index, comment) {
+                            //alert(index + comment.Text);
+                            renderComment('ul#comments', comment);
+                        });
+                    })
+                    .fail(function (responce) {
+                        processFail(responce);
                     });
-                });
+
             }
 
             function getReplies(id) {
-                $('ul#replies' + id).append('<li><b>Loading...</b></li>');
-                $.get('@Url.Action("GetReplies", "Comment")' + '?commentId=' + id, function (responce) {
-                    $('ul#replies' + id).empty();
-                    if (responce.length == 0) {
-                        $('ul#replies' + id).append('<li> There is no replies here yet </li>');
+                if ($('ul#replies' + id).hasClass('loaded'))
+                {
+                    if ($('ul#replies' + id).hasClass('hidden')) {
+                        $('ul#replies' + id).removeClass('hidden');
                     }
+                    else {
+                        $('ul#replies' + id).addClass('hidden');
+                    }
+                }
+                else {
+                    $.get('@Url.Action("GetReplies", "Comment")?commentId=' + id, function () {
+                    $('ul#replies' + id).removeClass('hidden');
+                    $('ul#replies' + id).addClass('loaded');
                 })
+                    .done(function (responce) {
+                        console.log(responce);
+                        if (responce.length == 0) {
+                            $('ul#replies' + id).append('<li>There is no replies here yet...</li>');
+                        }
+                        $.each(responce, function (index, comment) {
+                            renderComment('ul#replies' + id, comment);
+                        })
+                    })
+                        .fail(function (responce) {
+                            processFail(responce);
+                    });
+                }
             }
 
-            function ReplyTo(id) {
-
+            function replyTo(id) {
+                //TODO
             }
-            
+
+            function comment() {
+                //$('button#commentButton')
+                var text = $('#commentText').val();
+
+                var topicId = $("#topicId");
+
+                if (topicId.length == 0) {
+                    alert('Error - topic ID is not set!');
+                    return;
+                }
+
+                if (text.length == 0) {
+                    $('#commentText').addClass('danger');
+                    alert('Input comment text, please');
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("AddComment", "Comment")',
+                    type: 'post',
+                    data: { Text: text, TopicId: topicId },
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (responce) {
+                        $('u#comments').empty();
+                        $.each(responce, function (index, comment) {
+                            renderComment(comment);
+                        });
+                    }
+                });
+            }
     </script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

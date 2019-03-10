@@ -4,6 +4,7 @@ using DataAccessServices.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -54,9 +55,9 @@ namespace Web.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
-        public async Task<JsonResult> Comment(CommentViewModel model)
+        public async Task<JsonResult> AddComment(CommentViewModel model)
         {
             if (topicService.GetById(model.TopicId) == null)
             {
@@ -119,6 +120,7 @@ namespace Web.Controllers
             {
                 return NotFound("Comment to delete not found");
             }
+            //If author is deleting his comment, or some of admin trying to delete it
             if (User.IsInRole("admin") || 
                 User.IsInRole("superadmin") || 
                 User.IsInRole("moderator") || 
@@ -130,6 +132,11 @@ namespace Web.Controllers
                     return GetJson(commentService.GetTopicComments(model.TopicId));
                 }
                 return ServerError(result.Message);
+            }
+            else
+            {
+                Response.StatusCode = 401;
+                return GetJson(new { message = "Unauthorized" });
             }
         }
 
