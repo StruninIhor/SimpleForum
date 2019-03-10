@@ -178,6 +178,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AuthorHelper.cs" />
     <Compile Include="IoC\KernelHolderSingleton.cs" />
     <Compile Include="Models\Account\AccountViewModel.cs" />
     <Compile Include="Models\Account\ChangePasswordViewModel.cs" />

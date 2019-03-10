@@ -1,13 +1,10 @@
-#Restructuring 
-1. Divide contracts and implementations into two separate class libraries:
-	1.1. DataContract and DataAccessServices (Not the DAC that already exist)
-	1.2. BusinessContract and BusinessServices (From old DAC) 
-	1.3. Move Resolving Dependencies into separate class Library
-
 
 
 ## Web
-
+##Fix namespaces conflict in Views:
+	1. Article (Article) -> fixed
+	2. Forum (GetForum)
+	3. Check if ither views work properly
 
 ###Configure Comment form post and handling
 	1. Remove other attributes except HttpPostAttribute and HttpGetAttribute in CommentController and rewrite models and rename actions in CommentController
