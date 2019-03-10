@@ -8,6 +8,11 @@ namespace DataContract.Models
 {
     public class Comment : BaseEntity
     {
+        public Comment()
+        {
+            Replies = new List<Comment>();
+        }
+
         public int TopicId { get; set; }
         public virtual Topic Topic { get; set; }
 

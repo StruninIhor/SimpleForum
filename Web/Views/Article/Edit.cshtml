@@ -1,0 +1,34 @@
+﻿@model Web.Models.Article.EditArticleViewModel
+
+@{
+                /**/
+
+                ViewBag.Title = "Edit article";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Edit", "Article", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    @Html.HiddenFor(m => m.Id)
+<div class="form-group">
+    @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", aria_describedby = "articleNameBlock" })
+        <small id="articleNameBlock" class="form-text text-muted">Article name can't be modified</small>
+    </div>
+</div>
+
+    <div class="form-group-lg">
+        @Html.LabelFor(m => m.Text, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(m => m.Text, new { @class = "form-control", rows = 12, placeholder = "Input text of your article here..." })
+        </div>
+    </div>
+
+    <div class="form-group-sm">
+        <input type="submit" class="btn btn-primary" value="Submit changes" />
+    </div>
+}

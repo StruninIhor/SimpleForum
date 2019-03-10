@@ -1,0 +1,47 @@
+﻿@*@model ICollection<BusinessServices.Models.ForumModel>*@
+
+@{
+    ViewBag.Title = "Forums";
+}
+
+
+<div class="jumbotron">
+    @if (Request.IsAuthenticated && User.IsInRole("admin"))
+    {
+        @Html.ActionLink("Create new forum", "Create", null, new { @class = "btn btn-default" })
+    }
+    <table id="forumList" class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Forum</th>
+                <th>Created date</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="dialog" style="display: none"></div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#forumList').DataTable(
+            {
+                ajax : {
+                    "url": '@Url.Action("GetForums")',
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                columns: [
+                    { data: "Name", "autoWidth": true },
+                    {data: "CreatedDateString", "autoWidth": true},
+                    {
+                        data: "Id", width: "50px", render: function (id) {
+                            return '<a class="btn btn-info" title="Details" href="/Forum/GetForum/' + id + '">Details</a>';
+                        }
+                    }]
+            });
+
+    </script>
+    }
+

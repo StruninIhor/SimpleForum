@@ -10,6 +10,7 @@ namespace Web.Models.Account
     {
         [Required]
         [EmailAddress(ErrorMessage = "Email address is not valid")]
+        [Display(Name = "Email address")]
         public string Email { get; set; }
     }
 }

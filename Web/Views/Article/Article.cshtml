@@ -1,0 +1,43 @@
+﻿@model BusinessContract.Models.ArticleModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<hr />
+
+
+<div class="jumbotron">
+
+    <div class="h2">
+        @Html.ValueFor(m => m.Name)
+    </div>
+    <div class="lead">
+        @(new HtmlString(Model.Text))
+    </div>
+    <cite>Created by @Html.ActionLink(Model.AuthorName, $"GetUserProfile/{Model.AuthorId}", "Account") @Model.CreatedDateString</cite>
+</div>
+
+<hr />
+
+@if (Request.IsAuthenticated)
+{
+<div class="form-group">
+
+    @if (User.IsInRole("moderator") || User.IsInRole("admin") || User.IsInRole("superadmin") || Web.Helpers.AuthorHelper.GetUserIdByEmail(User.Identity.Name) == Model.AuthorId) 
+    {
+    <div class="col-md-1">
+        @Html.ActionLink("Edit", "Edit", "Article", new { id = Model.Id }, new { @class = "btn btn-primary" })
+    </div>
+    }
+    @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+    {
+    <div class="col-md-2">
+        @Html.ActionLink("Delete", "Delete", "Article", new { id = Model.Id }, new { @class = "btn btn-danger" })
+    </div>
+    <br />
+    <br />
+    }
+
+</div>
+}

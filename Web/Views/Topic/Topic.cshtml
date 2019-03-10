@@ -1,0 +1,77 @@
+﻿@model BusinessServices.Models.TopicModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<hr />
+
+@* AJAX *@
+
+@*@Html.Partial("_GetComments", Model)*@
+
+<div id="comments" class="list-group">
+
+</div>
+
+<div id="commentForm" style="display: none;">
+
+</div>
+
+@if (Request.IsAuthenticated)
+{
+    <button onclick="getCommentForm();" class="btn btn-primary">Comment</button>
+
+
+@section Scripts{
+    <script>
+        function getCommentForm() {
+            $.get('@Url.Action("GetCommentForm", new { topicId = Model.Id })', function (responce) {
+                //alert(responce);
+                var $commentForm = $("#commentForm").attr("style", "");
+                $commentForm.html(responce);
+            });
+        }
+
+        function sendComment() {
+            let comment = $("#commentForm");
+            if (comment != null) {
+                var data = {
+                    Text: $("textarea#Text.form-control.comment").val(),
+                    topicId: @Model.Id,
+                    
+
+                }
+
+                $.post('@Url.Action("Comment", "Topic")', { model: data }, function (responce) { alert(responce);})
+            }
+        }
+
+        convertTextToListItem = (Text) => '<li>' + Text + '</li>'
+
+        buildComment = (comment, parentItem) => {
+            currentComment = document.createElement('li').innerText = convertTextToListItem(comment.Text);
+            //$('.' + currentComment.attr('class')).addClass("comment id" + comment.Id)
+            if (parentItem == null) {
+                $('#comments').append(currentComment);
+            }
+            else {
+                $('.' + parentItem.class).append(currentComment)
+            }
+            if (comment.Replies !== []) {
+                $.each(comment.Replies, function (index, reply) {
+                    buildComment(reply, currentComment);
+                });
+            }
+        }
+
+            $.get('@Url.Action("GetComments", "Topic", new { topicId = Model.Id }, Request.Url.Scheme)',
+                function (responce) {
+                    $.each(responce, function (index, comment) {
+                        buildComment(comment, null);
+                    });
+        });
+    </script>
+}}

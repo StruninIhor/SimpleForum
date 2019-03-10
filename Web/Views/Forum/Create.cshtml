@@ -1,0 +1,23 @@
+﻿@model Web.Models.Forum.CreateViewModel
+
+@{
+    ViewBag.Title = "Create new forum";
+}
+<hr />
+<div>
+    <p class="text-center">
+        @using (Html.BeginForm("Create", "Forum", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary()
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.LabelFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Create" />
+            </div>
+        }
+        @Html.ActionLink("Back to list", "Index")
+    </p>
+</div>

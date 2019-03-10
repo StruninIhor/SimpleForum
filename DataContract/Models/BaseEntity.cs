@@ -14,6 +14,6 @@ namespace DataContract.Models
         public DateTime CreatedDate { get; set; }
 
         public int AuthorId { get; set; }
-        public AppUser Author { get; set; }
+        public virtual AppUser Author { get; set; }
     }
 }

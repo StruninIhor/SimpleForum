@@ -8,6 +8,11 @@ namespace DataContract.Models
 {
     public class Topic : BaseEntity
     {
+        public Topic()
+        {
+            Comments = new List<Comment>();
+        }
+
         public int ForumId { get; set; }
         public Forum Forum { get; set; }
 

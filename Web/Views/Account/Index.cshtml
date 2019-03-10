@@ -11,17 +11,17 @@
         <div class="col-md-1">
             @Html.ActionLink("Edit profile", "EditProfile", null, new { @class = "btn btn-primary", title = "Edit profile data" })
         </div>
-        @*<div class="col-md-2">
+        <div class="col-md-2">
+            @Html.ActionLink("Change password", "ChangePassword", null, new { @class="btn btn-default", title="Change password"})
+        </div>
+        @*<div class="col-md-3">
                 @Html.ActionLink("Delete profile", "Delete", null, new { @class = "btn btn-warning", title = "Delete your profile" })
             </div>*@
     </div>
 }
-
-<div class="page-header">
-    @Html.LabelFor(m => m.UserName)
-    @Html.DisplayFor(m => m.UserName)
-</div>
-@ActionPanel()
+<hr />
+<br />
+@*@ActionPanel()*@
 @Html.Partial("_ConfirmEmailConfirmation", Model)
 
 <form class="form-horizontal" role="form">

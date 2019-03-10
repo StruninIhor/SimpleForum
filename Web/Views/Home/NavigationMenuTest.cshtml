@@ -1,0 +1,49 @@
+﻿@model ICollection<Web.Models.MenuItem>
+
+@{
+    ViewBag.Title = "NavigationMenuTest";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+@helper BuildMenu(ICollection<Web.Models.MenuItem> data, string parentId = null)
+{
+    var items = data.Where(d => d.ParentId == parentId).OrderBy(i => i.Order);
+    if (items.Any())
+    {
+<ul>
+    @foreach (var item in items)
+    {
+        string icon = (item.Id.Contains("Article/GetArticle") ? "Article.ico" : (item.Id.Contains("Article")) ? 
+            "List.ico": (item.Id.Contains("Forum/GetForum")) ? "Forum.ico" : 
+            item.Id.Contains("Forum") ? "List.ico" : (item.Id.Contains("Topic") ? "Topic.ico" : ""));
+<li>
+    <div>
+
+        
+        <a href="@item.Id">
+            <img src="~/Content/custom.images/@icon" style="width: 20px; height: auto;" />
+        @item.Name</a>
+        @BuildMenu(item.Children, item.Id)
+    </div>
+</li>
+}
+</ul>
+    }
+}
+
+
+<h2>Nav menu test:</h2>
+
+
+<ul id="menu">
+    @BuildMenu(Model)
+</ul>
+
+@section Scripts
+{
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        //$("#menu").menu();
+    </script>
+}

@@ -1,0 +1,63 @@
+﻿@model Web.Models.Account.RegisterViewModel
+
+@{
+    /**/
+
+    ViewBag.Title = "Register";
+}
+
+<h2>Register new account</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary("", new { @class = "text-danger alert-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email)
+        <div>
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password)
+        <div>
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.PasswordConfirm)
+        <div>
+            @Html.PasswordFor(m => m.PasswordConfirm, new { @class = "form-control" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserName)
+        <div>
+            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Status)
+        <div>
+            @Html.TextBoxFor(m => m.Status, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="checkbox">
+        <label>@Html.CheckBoxFor(m => m.EmailNotificationsEnabled) Enable email notifications</label>
+    </div>
+    <div class="checkbox">
+        <label>@Html.CheckBoxFor(m => m.ForumNotificationsEnabled) Enable forum notifications</label>
+    </div>
+    <div class="checkbox">
+        <label>@Html.CheckBoxFor(m => m.SubscriptionEnabled) Enable subscription notifications</label>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary btn-lg" value="Sign up" />
+    </div>
+}

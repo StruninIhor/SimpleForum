@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using DataAccessServices.Interfaces;
+﻿using BusinessContract;
+using DependencyInjection;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using Web.Util;
+using System.Web.Configuration;
+using Web.IoC;
 
 [assembly: OwinStartup(typeof(Web.App_Start.Startup))]
 
@@ -16,7 +15,8 @@ namespace Web.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            app.CreatePerOwinContext<IUserService>(KernelHolder.CreateUserService);
+
+            app.CreatePerOwinContext<IUserService>(KernelHolderSingleton.KernelHolder.CreateUserService);
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,

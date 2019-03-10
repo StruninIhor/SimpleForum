@@ -1,0 +1,5 @@
+﻿@{
+    ViewBag.Title = "Email Confirmation";
+}
+
+@Html.Partial("_PartialTextIfAuthenticated", $"Congratulations, confirmation link was sent to {User.Identity.Name}")

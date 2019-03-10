@@ -1,0 +1,38 @@
+﻿@model ICollection<BusinessContract.Models.ArticleModel>
+
+@{
+    ViewBag.Title = "Articles";
+}
+
+@if (Request.IsAuthenticated)
+{
+    <hr />
+    @Html.ActionLink("Create new article", "Create", null, new { @class = "btn btn-primary" })
+}
+<hr />
+<table class="table table-hover table-bordered">
+    <thead class="info">
+        <tr>
+            <th class="info">Name</th>
+            <th class="info">Created date</th>
+            @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+            {
+                <th class="info">Delete</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var article in Model)
+        {
+        <tr>
+            <td>@Html.ActionLink(article.Name, "Article", new { id = article.Id })</td>
+            <td>@article.CreatedDateString</td>
+            @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+            {
+                <td style="width: 30px;">@Html.ActionLink("Delete", "Article", new { id = article.Id }, new { @class="btn btn-danger" })</td>
+            }
+
+        </tr>
+        }
+    </tbody>
+</table>

@@ -3,9 +3,37 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - MVC Forum</title>
     @Styles.Render("~/Content/css")
+
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 1500px}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @@media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -16,28 +44,269 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("MVC Forum", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    @Html.Partial("_LoginPartial")
+                    <li>@Html.ActionLink("Forums", "Index", "Forum")</li>
+                    <li>@Html.ActionLink("Articles", "Index", "Article")</li>
+                    <li>@Html.ActionLink("Nav menu test", "NavigationMenuTest", "Home")</li>
                 </ul>
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav">
+                <h4>Navigation</h4>
+                <ul class="nav nav-pills nav-stacked">
+                @* TODO AJAX Navigation *@
+                    <li><button onclick="getForums();" id="forumsItem" class="btn btn-success">
+                        <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">
+                        Forums</button>
+                    <ul id="forums" class="hidden">
+
+                    </ul>
+                    </li>
+                    <li><button onclick="getArticles();" id="articlesItem" class="btn btn-success">
+                            <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">Articles</button>
+                    <ul id="articles" class="hidden"></ul>
+                    </li>
+                    
+                </ul><br>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search..." disabled title="This option is temporary unavailible">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default disabled" type="button" disabled title="This option is temporary unavailible">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-sm-9 body">
+                @RenderBody()
+                @*<h4>Leave a Comment:</h4>
+                <form role="form">
+                    <div class="form-group">
+                        <textarea class="form-control" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+                <br><br>
+
+                <p><span class="badge">2</span> Comments:</p><br>*@
+
+            </div>
+        </div>
     </div>
 
+    <footer class="container-fluid">
+        <p>Footer Text</p>
+    </footer>
+        <script type="text/javascript">
+
+        function getForums() {
+            if ($("#forums").hasClass('hidden')) {
+                if ($("#forums").hasClass('loaded'))
+                {
+                    $("#forums").removeClass('hidden');
+                }
+                else
+                {
+                $("#forums").removeClass('hidden');
+                $('#forums').append(document.createElement('li').innerText = "<b>Loading...</b>");
+                $.get('@Url.Action("GetForums", "Forum")', function (responce) {
+                    $("#forums").empty();
+                    $.each(responce.data, function (index, forum) {
+                        $('#forums').append(document.createElement('li').innerText = '<button class="btn btn-default" onclick="getTopics(' + forum.Id + ');"><img src="/Content/custom.images/Forum.ico" style="width: 20px; height: auto;">' + forum.Name + '</button><br \><ul id="topics' + forum.Id + '" class="hidden"></ul>');
+
+                    });
+                    $("#forums").addClass("loaded");
+                });
+                }
+            }
+            else {
+                $("#forums").addClass('hidden');
+            }
+            }
+
+            function getTopics(id) {
+                if (($("#topics" + id).hasClass('hidden')))
+                {
+                    if ($("#topics" + id).hasClass('loaded')) {
+                        $("#topics" + id).removeClass('hidden');
+                    }
+                    else {
+                        $("#topics" + id).removeClass('hidden');
+                        $("#topics" + id).append(document.createElement('li').innerText = "<b>Loading...</b>");
+                        $.get('@Url.Action("GetTopics", "Forum")?forumId=' + id, function (responce) {
+                            $("#topics" + id).empty();
+
+                            if (responce.length == 0) {
+                                $("#topics" + id).append(document.createElement('li').innerText = 'There is no topics here');
+                            }
+
+                            $.each(responce, function (index, topic) {
+                                $("#topics" + id).append(document.createElement('li').innerText = '<button class="btn btn-default" onclick="getComments(' + topic.Id + ');"><img src="/Content/custom.images/Topic.ico" style="width: 20px; height: auto;">' + topic.Name + "</button><br \>");
+                            });
+                            $("#topics" + id).addClass("loaded");
+                        });
+                            }
+                }
+                else {
+                    $("#topics" + id).addClass("hidden");
+                }
+            }
+
+            function getArticles() {
+            if ($("#articles").hasClass('hidden')) {
+                if ($("#articles").hasClass('loaded'))
+                {
+                    $("#articles").removeClass('hidden');
+                }
+                else
+                {
+                $("#articles").removeClass('hidden');
+                $('#articles').append(document.createElement('li').innerText = "<b>Loading...</b>");
+                $.get('@Url.Action("GetArticles", "Article")', function (responce) {
+                    $("#articles").empty();
+                    $.each(responce, function (index, article) {
+                        var name = article.Name;
+                        if (name.length > 37)
+                            {
+                            var names = name.slice(0, 37).split(" ");
+                            name = names.slice(0, names.length - 1).join(" ") + "...";
+                            if (name.length > 37) {
+                                name = names.slice(0, names.length - 2).join(" ") + "..."
+                            }
+                            }
+                        $('#articles').append(document.createElement('li').innerText = '<button class="btn btn-default" onclick="getArticle(' + article.Id + ');"><img src="/Content/custom.images/Article.ico" style="width: 20px; height: auto;">' + name + '</button><br \>');
+                        //alert(article.Name);
+                    });
+                    $("#articles").addClass("loaded");
+                });
+                }
+            }
+            else {
+                $("#articles").addClass('hidden');
+            }
+            }
+
+            function renderComment(parentElementSelector, comment) {
+                $(parentElementSelector).append('<li id="comment' + comment.Id + '><h4 class="text-left" id=commentHeader"' + comment.id + '" >' + comment.AuthorName + '  <small>' + comment.CreatedDateString +
+                    '</small></h4><p>' + comment.Text + '</p><a class="btn btn-link" onclick="getReplies(' + comment.Id + ');">Replies</a><span></span><a class="btn btn-link" onclick="replyTo(' + comment.Id + ');">Reply</a><ul class="hidden" id="replies' + comment.Id + '"></ul></li>');
+            }
+
+            function processFail(responce) {
+                console.log(responce);
+                alert(responce.reponceJSON.message);
+            }
+
+            function addCommentForm() {
+                //TODO
+                if ($('ul#comments').length != 0) {
+                    $('.col-sm-9.body').append('<h4>Leave a comment:');
+                    $('.col-sm-9.body').append('<form role="form" id="commentForm"></form>');
+                    $('form#commentForm').append('<div class="form-group"> <textarea class="form-control" id="commentText" rows="3" required></textarea></div>');
+                    $('form#commentForm').append('<button type="submit" class="btn btn-success" id="commentButton">Submit</button>');
+                    $('.col-sm-9.body').append('<br \>');
+                    $('button#commentButton').click(function (event) { event.preventDefault(); comment(); });
+                }
+            }
+
+            function getComments(id) {
+                $('.body').empty();
+                $comments = document.createElement('ul');
+                $comments.setAttribute('id', 'comments');
+                $('.body').append($comments);
+                $('.body').append('<input type="hidden" id="topicId" value="' + id  + '" />');
+                $('ul#comments').append(document.createElement('li').innerText = "<b>Loading...</b>");
+                $.get('@Url.Action("GetComments", "Topic")' + '?topicId=' + id, function () { })
+                    .done(function (comments) {
+                        $('ul#comments').empty();
+                        $.each(comments, function (index, comment) {
+                            //alert(index + comment.Text);
+                            renderComment('ul#comments', comment);
+                        });
+                    })
+                    .fail(function (responce) {
+                        processFail(responce);
+                    });
+
+            }
+
+            function getReplies(id) {
+                if ($('ul#replies' + id).hasClass('loaded'))
+                {
+                    if ($('ul#replies' + id).hasClass('hidden')) {
+                        $('ul#replies' + id).removeClass('hidden');
+                    }
+                    else {
+                        $('ul#replies' + id).addClass('hidden');
+                    }
+                }
+                else {
+                    $.get('@Url.Action("GetReplies", "Comment")?commentId=' + id, function () {
+                    $('ul#replies' + id).removeClass('hidden');
+                    $('ul#replies' + id).addClass('loaded');
+                })
+                    .done(function (responce) {
+                        console.log(responce);
+                        if (responce.length == 0) {
+                            $('ul#replies' + id).append('<li>There is no replies here yet...</li>');
+                        }
+                        $.each(responce, function (index, comment) {
+                            renderComment('ul#replies' + id, comment);
+                        })
+                    })
+                        .fail(function (responce) {
+                            processFail(responce);
+                    });
+                }
+            }
+
+            function replyTo(id) {
+                //TODO
+            }
+
+            function comment() {
+                //$('button#commentButton')
+                var text = $('#commentText').val();
+
+                var topicId = $("#topicId");
+
+                if (topicId.length == 0) {
+                    alert('Error - topic ID is not set!');
+                    return;
+                }
+
+                if (text.length == 0) {
+                    $('#commentText').addClass('danger');
+                    alert('Input comment text, please');
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("AddComment", "Comment")',
+                    type: 'post',
+                    data: { Text: text, TopicId: topicId },
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (responce) {
+                        $('u#comments').empty();
+                        $.each(responce, function (index, comment) {
+                            renderComment(comment);
+                        });
+                    }
+                });
+            }
+    </script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/dataTables")
     @RenderSection("scripts", required: false)
 </body>
 </html>

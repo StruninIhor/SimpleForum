@@ -9,17 +9,26 @@ using System.Threading.Tasks;
 
 namespace DataContract.Identity
 {
-    class IdentityEmailService : IIdentityMessageService
+    public class IdentityEmailService : IIdentityMessageService
     {
+        public IdentityEmailService(IEmailConfiguration configuration)
+        {
+            this.emailConfiguration = configuration;
+        }
+
+        private IEmailConfiguration emailConfiguration;
+
         public Task SendAsync(IdentityMessage message)
         {
-            var from = new MailAddress(EmailConfiguration.UserName, EmailConfiguration.DisplayName);
+            string userName = emailConfiguration.UserName;
+            string display = emailConfiguration.DisplayName;
+            var from = new MailAddress(emailConfiguration.UserName, emailConfiguration.DisplayName);
 
-            SmtpClient client = new SmtpClient(EmailConfiguration.SmtpServer, EmailConfiguration.Port);
+            SmtpClient client = new SmtpClient(emailConfiguration.SmtpServer, emailConfiguration.Port);
 
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential(from.Address, EmailConfiguration.Password);
+            client.Credentials = new NetworkCredential(from.Address, emailConfiguration.Password);
             client.EnableSsl = true;
 
             //Creating email

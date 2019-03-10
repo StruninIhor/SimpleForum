@@ -1,0 +1,10 @@
+﻿@model string
+
+@if (@Request.IsAuthenticated)
+{
+    <p class="text-center h3">@Model</p>
+}
+else
+{
+    <p class="text-center h2 text-danger">Sorry, you have to @Html.ActionLink("sign in", "Login", new { ReturnUrl = Url.Action("Index", "Account") }) first</p>
+}

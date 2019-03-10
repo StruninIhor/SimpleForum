@@ -1,0 +1,52 @@
+﻿@model BusinessServices.Models.ForumModel
+
+@{
+    ViewBag.Title = $"Forum {Model.Name}";
+}
+
+<h2 class="text-center">@Model.Name</h2>
+<h5 class="col-md-3"><cite>Created by @Html.ActionLink(Model.AuthorName, $"GetUserProfile/{Model.AuthorId}", "Account") @Model.CreatedDateString</cite></h5>
+<div>
+    @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+    {
+    <div class="row">
+        @Html.ActionLink("Add new topic", "Create", "Topic", new { forumId = Model.Id }, new { @class = "btn btn-default col-md-2" })
+        @Html.ActionLink("Edit forum", "EditForum", new { id = Model.Id }, new { @class = "btn btn-primary col-md-2" })
+    </div>
+    }
+
+    
+
+    <table id="topics" class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="success">Topic</th>
+                <th class="success">Created date</th>
+                @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+                {
+                    <th class="success">Delete</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var topic in Model.Topics)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(topic.Name, "Topic", "Topic", new { id = topic.Id }, null)
+                    </td>
+                    <td>
+                        @topic.CreatedDateString
+                    </td>
+                    @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+                    {
+                        <td>
+                            @Html.ActionLink("Delete", "Delete", "Topic", new { id = topic.Id}, new { @class="btn btn-danger btn-block"})
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

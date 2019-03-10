@@ -40,18 +40,27 @@ namespace DataContract
             ConfigureAuthor(modelBuilder, u => u.Forums);
             ConfigureAuthor(modelBuilder, u => u.Articles);
 
-            modelBuilder.Entity<Comment>().HasRequired(c => c.Topic)
-                .WithMany(t => t.Comments)
-                .HasForeignKey(c => c.TopicId)
-                .WillCascadeOnDelete(true);
+            //modelBuilder.Entity<Comment>().HasRequired(c => c.Topic)
+            //    .WithMany(t => t.Comments)
+            //    .HasForeignKey(c => c.TopicId)
+            //    .WillCascadeOnDelete(true);
 
-            modelBuilder.Entity<Topic>().HasRequired(t => t.Forum)
-                .WithMany(f => f.Topics)
-                .HasForeignKey(t => t.ForumId)
-                .WillCascadeOnDelete(true);
+            //modelBuilder.Entity<Topic>().HasRequired(t => t.Forum)
+            //    .WithMany(f => f.Topics)
+            //    .HasForeignKey(t => t.ForumId)
+            //    .WillCascadeOnDelete(true);
 
             modelBuilder.Entity<Forum>().ToTable("Forums"); //Why EF is creating "Fora" instead of "Forums"?
 
+            modelBuilder.Entity<Forum>().HasMany(f => f.Topics)
+                .WithRequired(t => t.Forum)
+                .HasForeignKey(t => t.ForumId)
+                .WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Topic>().HasMany(t => t.Comments)
+                .WithRequired(c => c.Topic)
+                .HasForeignKey(c => c.TopicId)
+                .WillCascadeOnDelete(true);
             base.OnModelCreating(modelBuilder);
         }
 
