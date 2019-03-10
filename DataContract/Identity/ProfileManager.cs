@@ -1,12 +1,7 @@
-﻿using DataContract.Interfaces;
+﻿using DataContract;
 using DataContract.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataContract.Identity
+namespace DataAccessServices.Identity
 {
     public class ProfileManager : IProfileManager
     {

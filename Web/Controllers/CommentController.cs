@@ -1,12 +1,7 @@
-﻿using DataAccessServices.Infrastructure;
-using DataAccessServices.Interfaces;
-using DataAccessServices.Models;
-using System;
-using System.Collections.Generic;
+﻿using BusinessContract;
+using BusinessContract.Infrastructure;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Web.Models.Comment;
 

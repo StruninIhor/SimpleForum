@@ -1,17 +1,14 @@
-﻿using DataAccessServices.Models;
-using DataAccessServices.Interfaces;
+﻿using BusinessContract;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web.Models.Account;
-using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Host.SystemWeb;
 using Microsoft.AspNet.Identity.Owin;
 using System.Web.Configuration;
+using BusinessContract.Models;
 
 namespace Web.Controllers
 {
@@ -39,7 +36,7 @@ namespace Web.Controllers
         {
             if (!init)
             {
-                await UserService.SetInitialData(new DataAccessServices.Models.User
+                await UserService.SetInitialData(new BusinessContract.Models.User
                 {
                     Email = WebConfigurationManager.AppSettings["AdminEmail"],
                     Password = WebConfigurationManager.AppSettings["AdminPassword"],
@@ -362,7 +359,7 @@ namespace Web.Controllers
                     return View("Error");
                 }
 
-                if (UserService.Authenticate(new DataAccessServices.Models.User { Email = user.Email, Password = model.Password}) != null)
+                if (UserService.Authenticate(new BusinessContract.Models.User { Email = user.Email, Password = model.Password}) != null)
                 {
                     var result =  await UserService.ResetPasswordAsync(user.Id,
                     UserService.GeneratePasswordResetToken(user.Id), model.NewPassword);

@@ -1,8 +1,7 @@
-﻿using DataAccessServices.Interfaces;
-using System;
+﻿using BusinessContract;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Web.Models;
 
@@ -64,6 +63,8 @@ namespace Web.Controllers
             {
                 var item = new MenuItem { Order = 1, Icon = Path("Forum.ico"), Name = forum.Name, Id= Url.Action("GetForum", "Forum", new { id = forum.Id}), /*Parent = forumsItem,*/ ParentId = forumsItem.Id };
                 forumsItem.Children.Add(item);
+
+                //Debugger.Launch();
 
                 foreach (var topic in forumService.GetForum(forum.Id).Topics)
                 {

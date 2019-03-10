@@ -1,12 +1,8 @@
 ﻿using Ninject.Web.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Web.Util;
+using Web.IoC;
 
 namespace Web
 {
@@ -19,7 +15,7 @@ namespace Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(KernelHolder.Kernel));
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(KernelHolderSingleton.KernelHolder.Kernel));
         }
     }
 }
