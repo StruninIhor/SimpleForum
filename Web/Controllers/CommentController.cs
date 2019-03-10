@@ -1,5 +1,6 @@
 ﻿using BusinessContract;
 using BusinessContract.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -20,7 +21,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult Comment(int topicId, bool recursive = true)
+        public JsonResult GetComments(int topicId, bool recursive = true)
         {
             var topic = topicService.GetById(topicId, includeComments: false);
             if (topic == null)
@@ -73,7 +74,7 @@ namespace Web.Controllers
             }
             if (result.Succedeed)
             {
-                return GetJson(commentService.GetTopicComments(model.TopicId));
+                return GetJson(commentService.GetTopicComments(model.TopicId).Where(c => c.Order == 0).OrderByDescending(c => c.CreatedDate).ToList());
             }
             else
             {

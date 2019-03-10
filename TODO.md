@@ -1,9 +1,3 @@
-#Restructuring 
-1. Divide contracts and implementations into two separate class libraries:
-	1.1. DataContract and DataAccessServices (Not the DAC that already exist)
-	1.2. BusinessContract and BusinessServices (From old DAC) 
-	1.3. Move Resolving Dependencies into separate class Library
-
 
 
 ## Web
