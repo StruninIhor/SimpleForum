@@ -293,6 +293,49 @@ namespace BusinessServices
             Dispose(true);
         }
 
+        public ICollection<string> UserRoles(int userId)
+        {
+            var user = Database.UserManager.FindById(userId);
+            var result = new List<string>();
+            if (user != null)
+            {
+                foreach (var role in user.Roles)
+                {
+                    result.Add(Database.RoleManager.FindById(role.RoleId).Name);
+                }
+            }
+            return result;
+
+        }
+
+        public async Task<OperationDetails> AddToRole(int userId, string role)
+        {
+            var user = Database.UserManager.FindById(userId);
+
+            if (user != null)
+            {
+                if (Database.RoleManager.FindByName(role) != null)
+                {
+                    var result = await Database.UserManager.AddToRoleAsync(userId, role);
+                    if (!result.Succeeded)
+                    {
+                        return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
+                    }
+                    else return new OperationDetails(true, "User was added sucessfully", "");
+                }
+                else return new OperationDetails(false, $"Role with name {role} does not exists!", "");
+            }
+            else return new OperationDetails(false, "User was not found", "");
+        }
+        ICollection<User> Users { get {
+                var users = Database.UserManager.Users.ToList();
+                var result = new List<User>();
+                foreach (var user in users)
+                {
+                    result.Add(Mapper.Map(user));
+                }
+                return result;
+            } }
 
         #endregion
 

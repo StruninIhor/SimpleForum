@@ -34,5 +34,10 @@ namespace BusinessContract
 
         Task<bool> UserExists(string Email);
         List<string> GetUsers();
+
+        ICollection<string> UserRoles(int userId);
+        Task<OperationDetails> AddToRole(int userId, string role);
+
+        ICollection<User> Users { get; }
     }
 }
