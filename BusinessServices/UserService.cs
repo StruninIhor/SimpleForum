@@ -327,7 +327,11 @@ namespace BusinessServices
             }
             else return new OperationDetails(false, "User was not found", "");
         }
-        ICollection<User> Users { get {
+
+        ICollection<User> IUserService.Users
+        {
+            get
+            {
                 var users = Database.UserManager.Users.ToList();
                 var result = new List<User>();
                 foreach (var user in users)
@@ -335,7 +339,8 @@ namespace BusinessServices
                     result.Add(Mapper.Map(user));
                 }
                 return result;
-            } }
+            }
+        }
 
         #endregion
 

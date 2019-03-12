@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>Manage panel</h2>
+
+
+<table id="users" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Username
+            </th>
+            <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        function deleteUser(id)
+        {
+            $('#dialog').dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "Delete?": function () {
+                        $.post('@Url.Action("DeleteUser", "Manage")?id=' + id)
+                            .done(function () {
+                                $(this).dialog("close");
+                            })
+                            .fail(function (x) {
+                                alert(x);
+                                $(this).dialog("close");
+                            });
+
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        }
+
+        $('#users').DataTable({
+            ajax: {
+                url: '@Url.Action("GetUsers", "Manage")',
+                type: "get",
+                datatype: "json"
+            },
+            columns: [
+                { data: "Id", autoWidth: true },
+                { data: "Email", autoWidth: true },
+                { data: "UserName", autoWidth: true },
+                {
+                    data: "Id", width: "50px", "render": function (id) {
+                        return '<a href="@Url.Action("EditUser", "Manage")?id=' + id + '" class="btn btn-info">Edit</a>';
+                    }
+                },
+                {data: "Id", width: "50px", "render": function (id) {
+                    return '<button class="btn btn-danger delete" id="' + id + '" onclick="deleteUser('+ id +');">Delete</button>';
+                    }
+                }]
+        });
+
+
+        
+    </script>
+}

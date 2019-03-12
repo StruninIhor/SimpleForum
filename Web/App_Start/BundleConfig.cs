@@ -15,7 +15,7 @@ namespace Web
                         "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                "~/Scripts/jquery-ui-{version}.js"));
+                "~/Scripts/jquery-ui.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/dataTables").Include(
                 "~/Scripts/jquery.dataTables.js"));
