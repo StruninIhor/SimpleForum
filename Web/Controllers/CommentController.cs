@@ -74,7 +74,7 @@ namespace Web.Controllers
             }
             if (result.Succedeed)
             {
-                return GetJson(commentService.GetTopicComments(model.TopicId).Where(c => c.Order == 0).OrderByDescending(c => c.CreatedDate).ToList());
+                return GetJson(commentService.GetTopicComments(model.TopicId).Where(c => c.Order == 0).OrderBy(c => c.CreatedDate).ToList());
             }
             else
             {
@@ -108,7 +108,7 @@ namespace Web.Controllers
 
         [HttpDelete]
         [Authorize]
-        public JsonResult Comment(DeleteCommentViewModel model)
+        public JsonResult DeleteComment(DeleteCommentViewModel model)
         {
             var comment = commentService.GetById(model.Id);
 

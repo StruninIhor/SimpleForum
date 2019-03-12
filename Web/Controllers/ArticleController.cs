@@ -173,5 +173,18 @@ namespace Web.Controllers
             return Json(articles, JsonRequestBehavior.AllowGet);
         }
         
+        [HttpGet]
+        public JsonResult GetArticle(int id)
+        {
+            var article = articleService.GetArticle(id);
+
+            if (article == null)
+            {
+                Response.StatusCode = 401;
+                Response.StatusDescription = "Article not found";
+                return Json(new { message = "Article was not found" }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(article, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -64,19 +64,21 @@
             <div class="col-sm-3 sidenav">
                 <h4>Navigation</h4>
                 <ul class="nav nav-pills nav-stacked">
-                @* TODO AJAX Navigation *@
-                    <li><button onclick="getForums();" id="forumsItem" class="btn btn-success">
-                        <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">
-                        Forums</button>
-                    <ul id="forums" class="hidden">
+                    @* TODO AJAX Navigation *@
+                    <li>
+                        <button onclick="getForums();" id="forumsItem" class="btn btn-success">
+                            <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">
+                            Forums
+                        </button>
+                        <ul id="forums" class="hidden"></ul>
+                    </li>
+                    <li>
+                        <button onclick="getArticles();" id="articlesItem" class="btn btn-success">
+                            <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">Articles
+                        </button>
+                        <ul id="articles" class="hidden"></ul>
+                    </li>
 
-                    </ul>
-                    </li>
-                    <li><button onclick="getArticles();" id="articlesItem" class="btn btn-success">
-                            <img src="/Content/custom.images/List.ico" style="width: 20px; height: auto;">Articles</button>
-                    <ul id="articles" class="hidden"></ul>
-                    </li>
-                    
                 </ul><br>
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Search..." disabled title="This option is temporary unavailible">
@@ -90,25 +92,38 @@
 
             <div class="col-sm-9 body">
                 @RenderBody()
-                @*<h4>Leave a Comment:</h4>
-                <form role="form">
-                    <div class="form-group">
-                        <textarea class="form-control" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </form>
-                <br><br>
 
-                <p><span class="badge">2</span> Comments:</p><br>*@
 
             </div>
         </div>
     </div>
 
     <footer class="container-fluid">
-        <p>Footer Text</p>
+        <p>&copy; @DateTime.Now.Year - MVC Forum<span></span>
+        <a href="https://github.com/StruninIhor/SimpleForum/" class="btn-link" title="GitHub page"><img src="~/Content/custom.images/githubLogo.png" style="width: 30px; height: auto;" /></a><br /></p>
     </footer>
-        <script type="text/javascript">
+
+    @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
+    {
+    <div class="navbar navbar-inverse navbar-fixed-bottom">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Manage panel", "Index", "Manage", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @* TODO this *@
+                    <li><a href="/Manage/Statistics"><span class="glyphicon glyphicon-info-sign"></span> Statistics</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    }
+    <script type="text/javascript">
 
         function getForums() {
             if ($("#forums").hasClass('hidden')) {
@@ -290,6 +305,9 @@
             }
 
             function replyTo(id) {
+
+                showAuthenticationMessage();
+
                 if ($('#comment' + id) == undefined) {
                     throw "There is no such comment with given id";
                 }
@@ -321,6 +339,7 @@
 
             function comment() {
                 //$('button#commentButton')
+                showAuthenticationMessage();
                 var text = $('#commentText').val();
 
                 var topicId = $("#topicId").val();
@@ -347,8 +366,37 @@
                     .fail(function (responce) {
                         processFail(responce);
                     });
-            }
+        }
+
+        function getArticle(id) {
+            $.get('@Url.Action("GetArticle", "Article")/' + id)
+                .done(function (article) {
+                    $('.body').empty();
+                    $('.body').append('<div class="h2">' + article.Name + '</div>' +
+                        '<div class="lead">' + article.Text + '</div>' +
+                        '<cite>Created by <a href="/Account/GetUserProfile?id=' + article.AuthorId + '">' + article.AuthorName + '</a><br \>' + article.CreatedDateString + '</cite>');
+
+                })
+                .fail(function (responce) { processFail(responce); });
+        }
     </script>
+
+    @if (!Request.IsAuthenticated)
+    {
+        <script type="text/javascript">
+            function showAuthenticationMessage() {
+                alert('You have to sing in first!')
+            }
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            function showAuthenticationMessage() {
+            }
+        </script>
+    }
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/dataTables")
