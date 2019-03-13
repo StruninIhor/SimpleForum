@@ -99,29 +99,31 @@
     </div>
 
     <footer class="container-fluid">
-        <p>&copy; @DateTime.Now.Year - MVC Forum<span></span>
-        <a href="https://github.com/StruninIhor/SimpleForum/" class="btn-link" title="GitHub page"><img src="~/Content/custom.images/githubLogo.png" style="width: 30px; height: auto;" /></a><br /></p>
+        <p>
+            &copy; @DateTime.Now.Year - MVC Forum<span></span>
+            <a href="https://github.com/StruninIhor/SimpleForum/" class="btn-link" title="GitHub page"><img src="~/Content/custom.images/githubLogo.png" style="width: 30px; height: auto;" /></a><br />
+        </p>
     </footer>
 
     @if (User.IsInRole("admin") || User.IsInRole("superadmin"))
     {
-    <div class="navbar navbar-inverse navbar-fixed-bottom">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Manage panel", "Index", "Manage", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @* TODO this *@
-                    <li><a href="/Manage/Statistics"><span class="glyphicon glyphicon-info-sign"></span> Statistics</a></li>
-                </ul>
+        <div class="navbar navbar-inverse navbar-fixed-bottom">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Manage panel", "Index", "Manage", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        @* TODO this *@
+                        <li><a href="/Manage/Statistics"><span class="glyphicon glyphicon-info-sign"></span> Statistics</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
     }
     <script type="text/javascript">
 
@@ -398,6 +400,7 @@
     }
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/dataTables")
     @RenderSection("scripts", required: false)

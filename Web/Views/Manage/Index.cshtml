@@ -4,7 +4,7 @@
 }
 
 <h2>Manage panel</h2>
-
+<div id="dialog hidden"></div>
 
 <table id="users" class="table table-bordered">
     <thead>
@@ -28,37 +28,12 @@
     </thead>
     <tbody></tbody>
 </table>
-
+<div id="dialog" class="hidden">Are you sure you want to delete this user?</div>
 @section Scripts{
     <script type="text/javascript">
 
-        function deleteUser(id)
-        {
-            $('#dialog').dialog({
-                resizable: false,
-                height: "auto",
-                width: 400,
-                modal: true,
-                buttons: {
-                    "Delete?": function () {
-                        $.post('@Url.Action("DeleteUser", "Manage")?id=' + id)
-                            .done(function () {
-                                $(this).dialog("close");
-                            })
-                            .fail(function (x) {
-                                alert(x);
-                                $(this).dialog("close");
-                            });
-
-                    },
-                    Cancel: function () {
-                        $(this).dialog("close");
-                    }
-                }
-            });
-        }
-
-        $('#users').DataTable({
+        $(function () {
+             $('#users').DataTable({
             ajax: {
                 url: '@Url.Action("GetUsers", "Manage")',
                 type: "get",
@@ -78,8 +53,41 @@
                     }
                 }]
         });
+        });
 
 
-        
+        function deleteUser(id)
+        {
+            $('#dialog').removeClass('hidden');
+            $('#dialog').dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "Delete?": function () {
+                        $.post('@Url.Action("DeleteUser", "Manage")?id=' + id)
+                            .done(function () {
+                                $('#dialog').dialog("close");
+                                $('#users').DataTable().ajax.reload();
+                            })
+                            .fail(function (x) {
+                                alert(x);
+                                console.log(x);
+                                $('#dialog').dialog("close");
+                            });
+
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        }
+
+       
+
+
+
     </script>
 }
