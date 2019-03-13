@@ -68,6 +68,7 @@ namespace Web.Controllers
             }
         }
 
+
         JsonResult GetJson(object data) => Json(data, JsonRequestBehavior.AllowGet);
     }
 }
